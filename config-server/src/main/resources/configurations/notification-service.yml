@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: notification-service
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${NOTIFICATION_SERVICE_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    generate-ddl: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost/realms/splash/protocol/openid-connect/certs
+
+  #  kafka:
+  #    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+  #    consumer:
+  #      group-id: notification-group
+  #      auto-offset-reset: earliest
+  #    template:
+  #      default-topic: topic
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+      debug: true
+    protocol: smtps
+
+springdoc:
+  api-docs:
+    path: /notification/v3/api-docs
+  swagger-ui:
+    path: /notification/swagger-ui.html
+
+server:
+  port: 0
+  error:
+    include-message: always

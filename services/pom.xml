@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.anykeyers</groupId>
+        <artifactId>splash-backend</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>services</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <resteasy.version>3.1.3.Final</resteasy.version>
+        <keycloak.version>11.0.3</keycloak.version>
+    </properties>
+
+    <modules>
+        <module>business-order</module>
+        <module>configuration</module>
+        <module>notification</module>
+        <module>order</module>
+        <module>service</module>
+        <module>statistics</module>
+        <module>storage</module>
+        <module>user</module>
+    </modules>
+
+    <dependencyManagement>
+
+<!--        Keycloak-->
+        <dependencies>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-admin-client</artifactId>
+                <version>${keycloak.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

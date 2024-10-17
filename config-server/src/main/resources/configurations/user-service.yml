@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: user-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost/realms/splash/protocol/openid-connect/certs
+
+server:
+  port: 0
+  error:
+    include-message: always

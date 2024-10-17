@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: service-of-services
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${SERVICE_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+
+springdoc:
+  api-docs:
+    path: /service/v3/api-docs
+  swagger-ui:
+    path: /service/swagger-ui.html
+
+
+
+server:
+  port: 0
+  error:
+    include-message: always
