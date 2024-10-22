@@ -3,8 +3,6 @@ package ru.anykeyers.configurationservice.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import ru.anykeyers.commonsapi.domain.Address;
-import ru.anykeyers.commonsapi.domain.Interval;
 import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
 import ru.anykeyers.commonsapi.domain.configuration.OrganizationInfo;
 
@@ -45,9 +43,13 @@ public class Configuration {
      */
     private String address;
     /**
-     * Время работы
+     * Время открытия
      */
-    private long workTime;
+    private Instant openTime;
+    /**
+     * Время закрытия
+     */
+    private Instant closeTime;
     /**
      * Список боксов
      */

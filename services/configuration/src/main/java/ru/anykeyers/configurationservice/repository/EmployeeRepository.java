@@ -6,6 +6,7 @@ import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.domain.Employee;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * DAO для работы с работниками
@@ -26,6 +27,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
      * @param configuration автомойка
      * @param userId        идентификатор пользователя
      */
-    void deleteByConfigurationAndUserId(Configuration configuration, Long userId);
+    void deleteByConfigurationAndUserId(Configuration configuration, UUID userId);
 
 }

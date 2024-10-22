@@ -58,7 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void deleteEmployee(Long carWashId, Long userId) {
+    public void deleteEmployee(Long carWashId, UUID userId) {
         Configuration configuration = configurationRepository.findById(carWashId).orElseThrow(
                 () -> new ConfigurationNotFoundException(carWashId)
         );

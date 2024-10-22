@@ -32,6 +32,6 @@ public interface EmployeeService {
      * @param carWashId идентификатор автомойки
      * @param userId    идентификатор работника
      */
-    void deleteEmployee(Long carWashId, Long userId);
+    void deleteEmployee(Long carWashId, UUID userId);
 
 }

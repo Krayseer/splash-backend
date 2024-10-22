@@ -9,6 +9,7 @@ import ru.anykeyers.configurationservice.service.EmployeeService;
 import ru.anykeyers.configurationservice.web.ControllerName;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class EmployeeController {
     @Operation(summary = "Уволить работника с автомойки")
     @DeleteMapping("/{carWashId}")
     public void deleteEmployee(@PathVariable("carWashId") Long carWashId,
-                               @RequestParam("userId") Long userId) {
+                               @RequestParam("userId") UUID userId) {
         employeeService.deleteEmployee(carWashId, userId);
     }
 
