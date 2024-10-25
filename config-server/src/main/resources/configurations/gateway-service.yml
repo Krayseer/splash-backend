@@ -60,6 +60,16 @@ spring:
           predicates:
             Path=/api/notification/**
 
+        - id: storage-service
+          uri: lb://storage-service
+          predicates:
+            Path=/api/storage/**
+
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            Path=/api/chat/**
+
 
 server:
   port: ${GATEWAY_PORT}

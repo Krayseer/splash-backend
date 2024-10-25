@@ -16,8 +16,11 @@ import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.repository.EmployeeRepository;
 import ru.anykeyers.configurationservice.service.EmployeeService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса обработки работников
@@ -42,10 +45,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Configuration configuration = configurationRepository.findById(carWashId).orElseThrow(
                 () -> new ConfigurationNotFoundException(carWashId)
         );
-        List<UUID> employees = employeeRepository.findByConfiguration(configuration).stream()
+        Set<UUID> employees = employeeRepository.findByConfiguration(configuration).stream()
                 .map(Employee::getUserId)
-                .toList();
-        return remoteUserService.getUsers(employees);
+                .collect(Collectors.toSet());
+        return new ArrayList<>(remoteUserService.getUsers(employees)); //TODO: ПОПРАВИТЬ НА SET
     }
 
     @Override

@@ -29,8 +29,6 @@ public class KeycloakUserService implements UserService {
 
     private final KeycloakConfig.Configurator keycloakConfigurator;
 
-    private final RemoteStorageService remoteStorageService;
-
     @Override
     public User getUser(UUID id) {
         UserRepresentation keycloakUser = getUserResource(id).toRepresentation();
@@ -74,13 +72,13 @@ public class KeycloakUserService implements UserService {
 
     @Override
     public void addPhoto(User user, MultipartFile photo) {
-        ResponseEntity<String> photoUrlResponse = remoteStorageService.uploadPhoto(photo);
-        if (!photoUrlResponse.getStatusCode().is2xxSuccessful()) {
-            log.error("Cannot upload photo. Storage service returned status {}", photoUrlResponse.getStatusCode());
-            return;
-        }
+//        ResponseEntity<String> photoUrlResponse = remoteStorageService.uploadPhoto(photo);
+//        if (!photoUrlResponse.getStatusCode().is2xxSuccessful()) {
+//            log.error("Cannot upload photo. Storage service returned status {}", photoUrlResponse.getStatusCode());
+//            return;
+//        }
         UserInfo userInfo = user.getUserInfo();
-        userInfo.setPhotoUrl(photoUrlResponse.getBody());
+//        userInfo.setPhotoUrl(photoUrlResponse.getBody());
         UserResource userResource = getUserResource(user.getId());
         UserRepresentation keycloakUser = userResource.toRepresentation();
         keycloakUser.setAttributes(keycloakUserMapper.toAttributes(userInfo));

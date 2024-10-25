@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.anykeyers.commonsapi.domain.user.User;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -25,5 +25,5 @@ public interface RemoteUserService {
 
     //TODO: реализовать в том числе в контроллере
     @GetMapping
-    List<User> getUsers(List<UUID> employees);
+    Set<User> getUsers(Set<UUID> employees);
 }

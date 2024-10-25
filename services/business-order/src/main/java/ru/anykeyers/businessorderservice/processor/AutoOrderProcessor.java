@@ -8,7 +8,9 @@ import ru.anykeyers.commonsapi.MessageQueue;
 import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -24,7 +26,7 @@ public class AutoOrderProcessor implements OrderProcessor {
 
     @Override
     public void processOrder(OrderDTO order) {
-        List<UUID> freeEmployees = orderService.getFreeEmployees(order);
+        Set<UUID> freeEmployees = orderService.getFreeEmployees(order);
         if (freeEmployees.isEmpty()) {
             kafkaTemplate.send(MessageQueue.ORDER_DELETE, order);
             return;
@@ -38,8 +40,8 @@ public class AutoOrderProcessor implements OrderProcessor {
         return OrderProcessMode.AUTO;
     }
 
-    private UUID getFreeEmployeeOrder(List<UUID> freeEmployees) {
-        return freeEmployees.getFirst();
+    private UUID getFreeEmployeeOrder(Set<UUID> freeEmployees) {
+        return new ArrayList<>(freeEmployees).getFirst();
     }
 
 }

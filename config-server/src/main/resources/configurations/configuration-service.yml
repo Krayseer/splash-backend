@@ -20,6 +20,11 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
 
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+
 springdoc:
   api-docs:
     path: /car-wash/v3/api-docs

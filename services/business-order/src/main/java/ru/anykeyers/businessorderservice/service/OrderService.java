@@ -15,7 +15,9 @@ import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.commonsapi.remote.RemoteOrderService;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,7 +51,7 @@ public class OrderService {
      */
     public List<User> getFreeEmployees(Long orderId) {
         OrderDTO order = remoteOrderService.getOrder(orderId);
-        return remoteUserService.getUsers(getFreeEmployees(order));
+        return new ArrayList<>(remoteUserService.getUsers(getFreeEmployees(order))); //TODO: ПОПРАВИТЬ НА SET
     }
 
     /**
@@ -85,15 +87,15 @@ public class OrderService {
      *
      * @param order заказ
      */
-    public List<UUID> getFreeEmployees(OrderDTO order) {
-        List<UUID> employees = remoteConfigurationService.getEmployees(order.getCarWashId()).stream()
+    public Set<UUID> getFreeEmployees(OrderDTO order) {
+        Set<UUID> employees = remoteConfigurationService.getEmployees(order.getCarWashId()).stream()
                 .map(User::getId)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         List<OrderDTO> orders = remoteOrderService.getOrders(order.getCarWashId(), DateUtils.toDate(order.getStartTime()));
         if (CollectionUtils.isEmpty(orders)) {
             return employees;
         }
-        employees.removeAll(getBusyEmployees(orders, order));
+        getBusyEmployees(orders, order).forEach(employees::remove);
         return employees;
     }
 

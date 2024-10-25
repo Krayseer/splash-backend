@@ -1,9 +1,11 @@
 package ru.anykeyers.commonsapi.utils;
 
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.user.UserInfo;
 
+import java.security.Principal;
 import java.util.UUID;
 
 /**
@@ -12,7 +14,7 @@ import java.util.UUID;
 public class JwtUtils {
 
     /**
-     * Получение пользователя из JWT
+     * Получение пользователя из {@link Jwt}
      */
     public static User extractUser(Jwt jwt) {
         return User.builder()
@@ -20,6 +22,14 @@ public class JwtUtils {
                 .username((String) jwt.getClaims().get("preferred_username"))
                 .userInfo(extractUserInfo(jwt))
                 .build();
+    }
+
+    /**
+     * Получение пользователя из {@link Principal}
+     */
+    public static User extractUser(Principal principal) {
+        JwtAuthenticationToken jwtToken = (JwtAuthenticationToken) principal;
+        return extractUser(jwtToken.getToken());
     }
 
     private static UserInfo extractUserInfo(Jwt jwt) {
