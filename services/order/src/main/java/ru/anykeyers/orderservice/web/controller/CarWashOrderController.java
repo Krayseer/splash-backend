@@ -5,11 +5,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.anykeyers.commonsapi.utils.DateUtils;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
 import ru.anykeyers.commonsapi.domain.Interval;
+import ru.anykeyers.commonsapi.utils.JwtUtils;
 import ru.anykeyers.orderservice.service.CarWashService;
 import ru.anykeyers.orderservice.web.ControllerName;
 
@@ -25,6 +28,14 @@ public class CarWashOrderController {
     private final ModelMapper modelMapper;
 
     private final CarWashService orderService;
+
+    @Operation(summary = "Получить список всех заказов автомойки")
+    @GetMapping
+    public List<OrderDTO> getCarWashOrders(@AuthenticationPrincipal Jwt jwt) {
+        return orderService.getCarWashOrders(JwtUtils.extractUser(jwt)).stream()
+                .map(o -> modelMapper.map(o, OrderDTO.class))
+                .toList();
+    }
 
     @Operation(summary = "Получить список свободных отрезков времени в конкретный день")
     @GetMapping("/free-times")

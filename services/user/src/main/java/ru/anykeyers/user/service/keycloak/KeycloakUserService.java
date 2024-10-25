@@ -15,6 +15,7 @@ import ru.anykeyers.user.exception.UserAlreadyExistsException;
 import ru.anykeyers.user.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.user.UserInfo;
+import ru.krayseer.storageclient.FileStorageClient;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -28,6 +29,8 @@ public class KeycloakUserService implements UserService {
     private final KeycloakUserMapper keycloakUserMapper;
 
     private final KeycloakConfig.Configurator keycloakConfigurator;
+
+    private final FileStorageClient fileStorageClient;
 
     @Override
     public User getUser(UUID id) {
@@ -72,17 +75,14 @@ public class KeycloakUserService implements UserService {
 
     @Override
     public void addPhoto(User user, MultipartFile photo) {
-//        ResponseEntity<String> photoUrlResponse = remoteStorageService.uploadPhoto(photo);
-//        if (!photoUrlResponse.getStatusCode().is2xxSuccessful()) {
-//            log.error("Cannot upload photo. Storage service returned status {}", photoUrlResponse.getStatusCode());
-//            return;
-//        }
-        UserInfo userInfo = user.getUserInfo();
-//        userInfo.setPhotoUrl(photoUrlResponse.getBody());
-        UserResource userResource = getUserResource(user.getId());
-        UserRepresentation keycloakUser = userResource.toRepresentation();
-        keycloakUser.setAttributes(keycloakUserMapper.toAttributes(userInfo));
-        userResource.update(keycloakUser);
+        fileStorageClient.uploadPhoto(photo, photoId -> {
+            UserInfo userInfo = user.getUserInfo();
+            userInfo.setPhotoUrl(photoId);
+            UserResource userResource = getUserResource(user.getId());
+            UserRepresentation keycloakUser = userResource.toRepresentation();
+            keycloakUser.setAttributes(keycloakUserMapper.toAttributes(userInfo));
+            userResource.update(keycloakUser);
+        });
     }
 
     private UsersResource getUsersResource() {

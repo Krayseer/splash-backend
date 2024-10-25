@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.orderservice.domain.Order;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * DAO для работы с заказами
@@ -26,18 +28,18 @@ public interface OrderRepository extends JpaRepository<Order, Long>, PagingAndSo
     /**
      * Получить список заказов пользователя по статусу
      *
-     * @param username  имя пользователя
+     * @param userId    идентификатор пользователя
      * @param status    статус заказа
      */
-    List<Order> findByUsernameAndState(String username, OrderState status);
+    List<Order> findByUserIdAndState(UUID userId, OrderState status);
 
     /**
      * Получить список заказов пользователя по списку статусов
      *
-     * @param username      имя пользователя
+     * @param userId        идентификатор пользователя
      * @param orderStates   список состояний
      */
-    List<Order> findByUsernameAndStateIn(String username, List<OrderState> orderStates);
+    List<Order> findByUserIdAndStateIn(UUID userId, List<OrderState> orderStates);
 
     /**
      * Получить список заказов у автомойки
@@ -54,6 +56,13 @@ public interface OrderRepository extends JpaRepository<Order, Long>, PagingAndSo
      * @param status    статус заказа
      */
     int countByCarWashIdAndState(Long carWashId, OrderState status);
+
+    /**
+     * Получить список заказов автомойки пользователя
+     *
+     * @param id идентификатор пользователя
+     */
+    List<Order> findByUserId(UUID id);
 
     /**
      * Получить список заказов автомойки

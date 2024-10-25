@@ -4,12 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.orderservice.service.OrderService;
 import ru.anykeyers.orderservice.web.ControllerName;
 
@@ -26,8 +22,6 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    private final RemoteUserService remoteUserService;
-
     @Operation(summary = "Получить заказ по идентификатору")
     @GetMapping("/{id}")
     public OrderDTO getOrderById(@PathVariable Long id) {
@@ -40,11 +34,6 @@ public class OrderController {
         return orderService.getOrders(Arrays.stream(orderIds).toList()).stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
                 .toList();
-    }
-
-    @GetMapping("/test")
-    public User test() {
-        return remoteUserService.getUser("test");
     }
 
 }

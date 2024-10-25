@@ -23,7 +23,7 @@ public interface UserOrderService {
      *
      * @param username имя пользователя
      */
-    List<Order> getProcessedOrders(String username);
+    List<Order> getProcessedOrders(User username);
 
     /**
      * Создать заказ
@@ -33,7 +33,7 @@ public interface UserOrderService {
      *
      * @return обработанный заказ
      */
-    Order createOrder(String username, OrderDTO orderDTO);
+    Order createOrder(User username, OrderDTO orderDTO);
 
     /**
      * Удалить заказ

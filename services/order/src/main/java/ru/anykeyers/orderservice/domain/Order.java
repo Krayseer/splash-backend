@@ -8,6 +8,7 @@ import ru.anykeyers.commonsapi.domain.PaymentType;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Заказ
@@ -32,7 +33,7 @@ public class Order {
     /**
      * Имя пользователя заказчика
      */
-    private String username;
+    private UUID userId;
 
     /**
      * Идентификатор автомойки

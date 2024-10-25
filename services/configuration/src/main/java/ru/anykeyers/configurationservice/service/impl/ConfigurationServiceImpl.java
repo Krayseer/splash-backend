@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Configuration;
@@ -66,13 +68,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public void updateConfiguration(ConfigurationDTO configurationDTO) {
         Configuration updatedConfiguration = modelMapper.map(configurationDTO, Configuration.class);
         configurationRepository.save(updatedConfiguration);
-        if (configurationDTO.getVideo() != null) {
-            threadPool.execute(() -> fileStorageClient.uploadVideo(configurationDTO.getVideo(), fileId -> {
-                updatedConfiguration.addVideo(fileId);
-                configurationRepository.save(updatedConfiguration);
-                log.info("Success upload file: {}", updatedConfiguration.getVideoId());
-            }));
-        }
+        uploadConfigurationVideo(updatedConfiguration, configurationDTO.getVideo());
+        uploadConfigurationPhotos(updatedConfiguration, configurationDTO.getPhotos());
         log.info("Update configuration: {}", updatedConfiguration);
     }
 
@@ -81,6 +78,28 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         Configuration configuration = getConfiguration(user);
         configurationRepository.delete(configuration);
         log.info("Deleted configuration: {}", configuration);
+    }
+
+    private void uploadConfigurationVideo(Configuration configuration, MultipartFile video) {
+        if (video == null) {
+            return;
+        }
+        threadPool.execute(() -> fileStorageClient.uploadVideo(video, fileId -> {
+            configuration.addVideo(fileId);
+            configurationRepository.save(configuration);
+            log.info("Success configuration video: {}", configuration.getVideoId());
+        }));
+    }
+
+    private void uploadConfigurationPhotos(Configuration configuration, List<MultipartFile> photos) {
+        if (CollectionUtils.isEmpty(photos)) {
+            return;
+        }
+        threadPool.execute(() -> fileStorageClient.uploadPhotos(photos, fileIds -> {
+            configuration.addPhotoUrls(fileIds);
+            configurationRepository.save(configuration);
+            log.info("Success upload configuration photos: {}", configuration.getPhotoUrls());
+        }));
     }
 
 }

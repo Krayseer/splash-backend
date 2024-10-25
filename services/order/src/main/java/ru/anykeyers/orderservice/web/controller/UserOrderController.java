@@ -50,7 +50,7 @@ public class UserOrderController {
     @Operation(summary = "Получить все завершенные заказы пользователя")
     @GetMapping("/processed")
     public List<OrderDTO> getProcessedOrders(@AuthenticationPrincipal Jwt jwt) {
-        return userOrderService.getProcessedOrders(jwt.getSubject()).stream()
+        return userOrderService.getProcessedOrders(JwtUtils.extractUser(jwt)).stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
                 .toList();
     }
@@ -59,14 +59,14 @@ public class UserOrderController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@AuthenticationPrincipal Jwt jwt, @RequestBody OrderDTO orderDTO) {
-        Order order = userOrderService.createOrder(jwt.getSubject(), orderDTO);
+        Order order = userOrderService.createOrder(JwtUtils.extractUser(jwt), orderDTO);
         return modelMapper.map(order, OrderDTO.class);
     }
 
     @Operation(summary = "Удалить заказ пользователя")
     @DeleteMapping("/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@AuthenticationPrincipal Jwt jwt, @PathVariable Long orderId) {
+    public void deleteOrder(@PathVariable Long orderId) {
         userOrderService.deleteOrder(orderId);
     }
 

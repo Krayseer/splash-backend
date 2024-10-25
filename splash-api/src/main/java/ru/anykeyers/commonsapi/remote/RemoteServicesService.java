@@ -16,7 +16,7 @@ import java.util.List;
  */
 @FeignClient(
         name = "service-of-services",
-        path="/api/service"
+        path = "/api/service"
 )
 public interface RemoteServicesService {
 

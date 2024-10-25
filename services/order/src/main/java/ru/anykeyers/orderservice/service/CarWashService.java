@@ -2,6 +2,7 @@ package ru.anykeyers.orderservice.service;
 
 import ru.anykeyers.commonsapi.domain.Interval;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
+import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.orderservice.domain.Order;
 
 import java.time.Instant;
@@ -12,6 +13,13 @@ import java.util.Set;
  * Сервис обработки заказов автомойки
  */
 public interface CarWashService {
+
+    /**
+     * Получить список заказов автомойки пользователя
+     *
+     * @param user пользователь
+     */
+    List<Order> getCarWashOrders(User user);
 
     /**
      * Получить список заказов автомойки

@@ -59,6 +59,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getCarWashOrders(User user) {
+        return orderRepository.findByUserId(user.getId());
+    }
+
+    @Override
     public List<Order> getCarWashOrders(Long carWashId) {
         return orderRepository.findByCarWashId(carWashId);
     }
@@ -99,20 +104,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getActiveOrders(User user) {
-        return orderRepository.findByUsernameAndStateIn(
-                user.getUsername(), List.of(OrderState.WAIT_CONFIRM, OrderState.WAIT_PROCESS, OrderState.PROCESSING)
+        return orderRepository.findByUserIdAndStateIn(
+                user.getId(), List.of(OrderState.WAIT_CONFIRM, OrderState.WAIT_PROCESS, OrderState.PROCESSING)
         );
     }
 
     @Override
-    public List<Order> getProcessedOrders(String username) {
-        return orderRepository.findByUsernameAndState(username, OrderState.PROCESSED);
+    public List<Order> getProcessedOrders(User user) {
+        return orderRepository.findByUserIdAndState(user.getId(), OrderState.PROCESSED);
     }
 
     @Override
     @Transactional
-    public Order createOrder(String username, OrderDTO orderDTO) {
+    public Order createOrder(User user, OrderDTO orderDTO) {
         Order order = modelMapper.map(orderDTO, Order.class);
+        order.setUserId(user.getId());
         order.setEndTime(orderCalculator.calculateOrderEndTime(orderDTO));
         order.setBoxId(
                 orderCalculator.findFreeBox(
