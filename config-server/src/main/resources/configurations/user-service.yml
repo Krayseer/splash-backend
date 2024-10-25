@@ -6,7 +6,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost/realms/splash/protocol/openid-connect/certs
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
 
 server:
   port: 0

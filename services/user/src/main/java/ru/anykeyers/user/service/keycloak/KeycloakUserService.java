@@ -15,7 +15,6 @@ import ru.anykeyers.user.exception.UserAlreadyExistsException;
 import ru.anykeyers.user.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.user.UserInfo;
-import ru.anykeyers.commonsapi.remote.RemoteStorageService;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;

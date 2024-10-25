@@ -1,9 +1,7 @@
 package ru.anykeyers.commonsapi.domain.configuration;
 
 import jakarta.validation.constraints.Null;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.anykeyers.commonsapi.validation.OnCreate;
 
 /**
@@ -12,6 +10,8 @@ import ru.anykeyers.commonsapi.validation.OnCreate;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrganizationInfo {
     /**
      * ИНН

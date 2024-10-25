@@ -63,4 +63,6 @@ public class ConfigurationDTO {
     @NotNull(groups = OnUpdate.class)
     private OrderProcessMode orderProcessMode;
 
+    private MultipartFile video;
+
 }

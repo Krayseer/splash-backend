@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -38,6 +39,12 @@ public class User {
      * Данные пользователя
      */
     private UserInfo userInfo;
+
+    /**
+     * Аватарка
+     */
+    private MultipartFile avatar;
+
     /**
      * Дата создания
      */

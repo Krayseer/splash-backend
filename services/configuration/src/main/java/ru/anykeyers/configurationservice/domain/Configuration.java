@@ -75,7 +75,17 @@ public class Configuration {
     /**
      * Режим обработки заказов
      */
+    @Column(
+            name = "order_process_mode"
+    )
     private OrderProcessMode orderProcessMode;
+    /**
+     * URL рекламного видеоролика
+     */
+    @Column(
+            name = "video_id"
+    )
+    private String videoId;
     /**
      * Время регистрации автомойки
      */
@@ -89,4 +99,7 @@ public class Configuration {
         this.photoUrls.addAll(photoUrls);
     }
 
+    public void addVideo(String fileId) {
+        this.videoId = fileId;
+    }
 }

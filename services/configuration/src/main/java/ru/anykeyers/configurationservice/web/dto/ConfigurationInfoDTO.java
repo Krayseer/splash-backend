@@ -43,4 +43,6 @@ public class ConfigurationInfoDTO {
 
     private OrderProcessMode orderProcessMode;
 
+    private String videoId;
+
 }

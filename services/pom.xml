@@ -25,14 +25,19 @@
         <module>order</module>
         <module>service</module>
         <module>statistics</module>
-        <module>storage</module>
         <module>user</module>
     </modules>
 
     <dependencyManagement>
-
-<!--        Keycloak-->
         <dependencies>
+            <!-- Хранилище -->
+            <dependency>
+                <groupId>ru.anykeyers</groupId>
+                <artifactId>storage-client</artifactId>
+                <version>${parent.version}</version>
+            </dependency>
+
+            <!-- Keycloak -->
             <dependency>
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-admin-client</artifactId>

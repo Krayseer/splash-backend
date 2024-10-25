@@ -6,17 +6,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.remote.RemoteStorageService;
-import ru.anykeyers.configurationservice.UploadPhotoTask;
-import ru.anykeyers.configurationservice.service.TaskManager;
 import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundException;
 import ru.anykeyers.configurationservice.exception.UserNotFoundConfigurationException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
+import ru.krayseer.storageclient.FileStorageClient;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Реализация сервиса обработки конфигураций
@@ -26,13 +26,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ConfigurationServiceImpl implements ConfigurationService {
 
-    private final TaskManager taskManager;
-
     private final ModelMapper modelMapper;
 
-    private final RemoteStorageService remoteStorageService;
-
     private final ConfigurationRepository configurationRepository;
+
+    private final FileStorageClient fileStorageClient;
+
+    private final ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
 
     @Override
     public List<Configuration> getAllConfigurations() {
@@ -66,8 +66,12 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public void updateConfiguration(ConfigurationDTO configurationDTO) {
         Configuration updatedConfiguration = modelMapper.map(configurationDTO, Configuration.class);
         configurationRepository.save(updatedConfiguration);
-        if (configurationDTO.getPhotoUrls() != null) {
-            taskManager.addTask(new UploadPhotoTask(remoteStorageService, configurationDTO.getPhotos(), configurationRepository, updatedConfiguration.getId()));
+        if (configurationDTO.getVideo() != null) {
+            threadPool.execute(() -> fileStorageClient.uploadVideo(configurationDTO.getVideo(), fileId -> {
+                updatedConfiguration.addVideo(fileId);
+                configurationRepository.save(updatedConfiguration);
+                log.info("Success upload file: {}", updatedConfiguration.getVideoId());
+            }));
         }
         log.info("Update configuration: {}", updatedConfiguration);
     }
