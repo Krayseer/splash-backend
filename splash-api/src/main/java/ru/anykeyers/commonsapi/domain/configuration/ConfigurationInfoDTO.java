@@ -1,14 +1,11 @@
-package ru.anykeyers.configurationservice.web.dto;
+package ru.anykeyers.commonsapi.domain.configuration;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.anykeyers.commonsapi.domain.Address;
-import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
-import ru.anykeyers.commonsapi.domain.configuration.OrganizationInfo;
 import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
-import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
 
 import java.time.Instant;
 import java.util.List;

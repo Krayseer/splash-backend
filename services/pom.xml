@@ -26,6 +26,8 @@
         <module>service</module>
         <module>statistics</module>
         <module>user</module>
+        <module>storage</module>
+        <module>chat</module>
     </modules>
 
     <dependencyManagement>
@@ -34,7 +36,7 @@
             <dependency>
                 <groupId>ru.anykeyers</groupId>
                 <artifactId>storage-client</artifactId>
-                <version>${parent.version}</version>
+                <version>${project.parent.version}</version>
             </dependency>
 
             <!-- Keycloak -->

@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.anykeyers.commonsapi.domain.Interval;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Set<Interval> getOrderFreeTimes(Long carWashId, Instant date) {
-        ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(carWashId);
+        ConfigurationInfoDTO configuration = remoteConfigurationService.getConfiguration(carWashId);
         Instant startTime = Optional.ofNullable(configuration.getOpenTime())
                 .map(openTime -> DateUtils.addTimeToInstant(date, openTime))
                 .orElse(date);

@@ -3,6 +3,9 @@ package ru.anykeyers.commonsapi.domain.order;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ru.anykeyers.commonsapi.domain.PaymentType;
+import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
+import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
+import ru.anykeyers.commonsapi.domain.user.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +26,10 @@ public class OrderDTO {
     )
     private UUID userId;
 
+    private User user;
+    private List<ServiceDTO> services;
+    private BoxDTO box;
+
     private Long carWashId;
 
     @JsonProperty(
@@ -41,14 +48,14 @@ public class OrderDTO {
 
     private long startTime;
 
-    @JsonProperty(
-            access = JsonProperty.Access.READ_ONLY
-    )
+//    @JsonProperty(
+//            access = JsonProperty.Access.READ_ONLY
+//    )
     private long endTime;
 
-    @JsonProperty(
-            access = JsonProperty.Access.READ_ONLY
-    )
-    private long createdAt;
+//    @JsonProperty(
+//            access = JsonProperty.Access.READ_ONLY
+//    )
+    private String createdAt;
 
 }

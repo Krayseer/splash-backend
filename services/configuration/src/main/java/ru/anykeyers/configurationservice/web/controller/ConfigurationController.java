@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.utils.JwtUtils;
-import ru.anykeyers.configurationservice.web.dto.ConfigurationInfoDTO;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 import ru.anykeyers.configurationservice.web.mapper.ConfigurationMapper;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.ControllerName;

@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoxDTO {
-    private Long carWashId;
-    private String name;
 
     private Long id;
+
+    private String name;
+
+    private Long carWashId;
+
 }

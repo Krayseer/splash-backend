@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.anykeyers.commonsapi.remote.RemoteServicesService;
 import ru.anykeyers.configurationservice.domain.Configuration;
-import ru.anykeyers.configurationservice.web.dto.ConfigurationInfoDTO;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 
 /**
  * Фабрика по созданию конфигруации

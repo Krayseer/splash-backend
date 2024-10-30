@@ -3,6 +3,7 @@ package ru.anykeyers.notificationservice.processor.employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
@@ -53,7 +54,7 @@ class EmployeeNotificationCreator {
      * Создать уведомление о назначении работника на заказ
      */
     public Notification createNotificationEmployeeOrderApply(OrderDTO order) {
-        ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
+        ConfigurationInfoDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
         return new Notification(
                 messages.getMessage("order.employee.apply.subject"),
                 messages.getMessage("order.employee.apply", configuration.getAddress(), order.getStartTime())

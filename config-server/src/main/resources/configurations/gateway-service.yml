@@ -66,9 +66,14 @@ spring:
             Path=/api/storage/**
 
         - id: chat-service
-          uri: lb://chat-service
+          uri: lb:ws://chat-service
           predicates:
-            Path=/api/chat/**
+            Path=/ws/**
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG
 
 
 server:

@@ -65,4 +65,6 @@ public class ConfigurationDTO {
 
     private MultipartFile video;
 
+    private String videoId;
+
 }
