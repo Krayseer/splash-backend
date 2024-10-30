@@ -26,6 +26,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .build();
     }
 
+    @Bean
+    public TokenHandshakeInterceptor tokenHandshakeInterceptor() {
+        return new TokenHandshakeInterceptor();
+    }
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry
@@ -36,8 +41,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
-                .addEndpoint("/ws")
-                .setAllowedOrigins("*");
+                .addEndpoint("/api/chat/ws")
+                .setAllowedOrigins("*")
+                .addInterceptors(tokenHandshakeInterceptor());
     }
 
 }

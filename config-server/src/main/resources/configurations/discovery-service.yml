@@ -7,6 +7,8 @@ eureka:
     fetch-registry: false
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    instance:
+      prefer-ip-address: true
 
 server:
   port: ${DISCOVERY_PORT}
