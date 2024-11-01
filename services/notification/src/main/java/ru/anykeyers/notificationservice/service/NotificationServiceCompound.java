@@ -4,7 +4,6 @@ import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.domain.user.UserSettingDTO;
 import ru.anykeyers.notificationservice.domain.Notification;
 
 import java.util.List;
@@ -30,12 +29,12 @@ public class NotificationServiceCompound {
      * @param notification  уведомление
      */
     public void sendNotification(User user, Notification notification) {
-//        for (NotificationService service : getNotificationServices(user.getUserSetting())) {
-//            threadPool.execute(() -> service.sendNotification(user, notification));
-//        }
+        for (NotificationService service : getNotificationServices(user.getSetting())) {
+            threadPool.execute(() -> service.sendNotification(user, notification));
+        }
     }
 
-    private List<NotificationService> getNotificationServices(UserSettingDTO userSetting) {
+    private List<NotificationService> getNotificationServices(User.Setting userSetting) {
         return notificationServices.stream()
                 .filter(service -> service.supports(userSetting))
                 .toList();

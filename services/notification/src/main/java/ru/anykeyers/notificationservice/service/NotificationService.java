@@ -1,7 +1,6 @@
 package ru.anykeyers.notificationservice.service;
 
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.domain.user.UserSettingDTO;
 import ru.anykeyers.notificationservice.domain.Notification;
 
 /**
@@ -22,6 +21,6 @@ public interface NotificationService {
      *
      * @param userSetting настройки пользователя
      */
-    boolean supports(UserSettingDTO userSetting);
+    boolean supports(User.Setting userSetting);
 
 }

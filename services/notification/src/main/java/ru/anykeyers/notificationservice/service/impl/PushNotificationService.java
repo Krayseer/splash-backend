@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.domain.user.UserSettingDTO;
 import ru.anykeyers.notificationservice.domain.Notification;
 import ru.anykeyers.notificationservice.repository.NotificationRepository;
 import ru.anykeyers.notificationservice.domain.PushNotification;
@@ -51,8 +50,8 @@ public class PushNotificationService implements NotificationService {
     }
 
     @Override
-    public boolean supports(UserSettingDTO userSetting) {
-        return userSetting.pushEnabled();
+    public boolean supports(User.Setting userSetting) {
+        return userSetting.isPushEnabled();
     }
 
     /**

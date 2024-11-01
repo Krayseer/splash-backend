@@ -1,4 +1,4 @@
-package ru.anykeyers.gateway;
+package ru.anykeyers.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

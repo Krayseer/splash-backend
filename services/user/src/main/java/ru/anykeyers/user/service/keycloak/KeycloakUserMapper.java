@@ -24,6 +24,10 @@ class KeycloakUserMapper {
 
     private static final String PHOTO_URL_ATTRIBUTE = "photo_url";
 
+    private static final String PUSH_ENABLED_ATTRIBUTE = "push_enabled";
+
+    private static final String EMAIL_ENABLED_ATTRIBUTE = "email_enabled";
+
     private final ModelMapper modelMapper;
 
     private final KeycloakConfig.Configurator keycloakConfigurator;
@@ -35,7 +39,7 @@ class KeycloakUserMapper {
         User user = modelMapper.map(userRepresentation, User.class);
         user.setId(UUID.fromString(userRepresentation.getId()));
         UserInfo userInfo = modelMapper.map(userRepresentation, UserInfo.class);
-        fillUserInfo(userInfo, userRepresentation.getAttributes());
+        fillUser(user, userRepresentation.getAttributes());
         user.setUserInfo(userInfo);
         return user;
     }
@@ -45,9 +49,7 @@ class KeycloakUserMapper {
      */
     public UserRepresentation toKeycloakUser(User user) {
         UserRepresentation keycloakUser = modelMapper.map(user, UserRepresentation.class);
-        keycloakUser.setAttributes(Map.of(
-                PHONE_NUMBER_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhoneNumber())
-        ));
+        keycloakUser.setAttributes(toAttributes(user));
         keycloakUser.setCredentials(keycloakConfigurator.createPasswordCredentials(user.getPassword()));
         keycloakUser.setEnabled(true);
         return keycloakUser;
@@ -56,20 +58,31 @@ class KeycloakUserMapper {
     /**
      * Преобразовать поля пользователя в атрибуты
      */
-    public Map<String, List<String>> toAttributes(UserInfo userInfo) {
+    public Map<String, List<String>> toAttributes(User user) {
         return Map.of(
-                PHONE_NUMBER_ATTRIBUTE, Collections.singletonList(userInfo.getPhoneNumber()),
-                PHOTO_URL_ATTRIBUTE, Collections.singletonList(userInfo.getPhotoUrl())
+                PHONE_NUMBER_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhoneNumber()),
+                PHOTO_URL_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhotoUrl()),
+                PUSH_ENABLED_ATTRIBUTE, Collections.singletonList(Boolean.toString(user.getSetting().isPushEnabled())),
+                EMAIL_ENABLED_ATTRIBUTE, Collections.singletonList(Boolean.toString(user.getSetting().isEmailEnabled()))
+
         );
     }
 
-    private void fillUserInfo(UserInfo userInfo, Map<String, List<String>> attributes) {
+    private void fillUser(User user, Map<String, List<String>> attributes) {
         if (attributes.containsKey(PHONE_NUMBER_ATTRIBUTE)) {
-            userInfo.setPhoneNumber(attributes.get(PHONE_NUMBER_ATTRIBUTE).getFirst());
+            user.getUserInfo().setPhoneNumber(attributes.get(PHONE_NUMBER_ATTRIBUTE).getFirst());
         }
         if (attributes.containsKey(PHOTO_URL_ATTRIBUTE)) {
-            userInfo.setPhotoUrl(attributes.get(PHOTO_URL_ATTRIBUTE).getFirst());
+            user.getUserInfo().setPhotoUrl(attributes.get(PHOTO_URL_ATTRIBUTE).getFirst());
         }
+        User.Setting setting = new User.Setting();
+        if (attributes.containsKey(PUSH_ENABLED_ATTRIBUTE)) {
+            setting.setPushEnabled(Boolean.parseBoolean(attributes.get(PUSH_ENABLED_ATTRIBUTE).getFirst()));
+        }
+        if (attributes.containsKey(EMAIL_ENABLED_ATTRIBUTE)) {
+            setting.setEmailEnabled(Boolean.parseBoolean(attributes.get(EMAIL_ENABLED_ATTRIBUTE).getFirst()));
+        }
+        user.setSetting(setting);
     }
 
 }

@@ -37,10 +37,6 @@ public class UserInfo {
      */
     private String photoUrl;
     /**
-     * Настройки пользователя
-     */
-    private UserSettingDTO userSetting;
-    /**
      * Список ролей
      */
     private List<String> roles;

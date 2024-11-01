@@ -8,7 +8,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.domain.user.UserSettingDTO;
 import ru.anykeyers.notificationservice.domain.Notification;
 import ru.anykeyers.notificationservice.service.NotificationService;
 
@@ -41,8 +40,8 @@ public class SmtpEmailService implements NotificationService {
     }
 
     @Override
-    public boolean supports(UserSettingDTO userSetting) {
-        return userSetting.emailEnabled();
+    public boolean supports(User.Setting userSetting) {
+        return userSetting.isEmailEnabled();
     }
 
 }

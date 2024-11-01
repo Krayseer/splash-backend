@@ -1,11 +1,7 @@
 package ru.anykeyers.commonsapi.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -20,9 +16,6 @@ public class User {
     /**
      * Идентификатор
      */
-//    @JsonProperty(
-//            access = JsonProperty.Access.READ_ONLY
-//    )
     private UUID id;
     /**
      * Имя пользователя
@@ -31,25 +24,40 @@ public class User {
     /**
      * Пароль
      */
-//    @JsonProperty(
-//            access = JsonProperty.Access.WRITE_ONLY
-//    )
+    @JsonProperty(
+            access = JsonProperty.Access.WRITE_ONLY
+    )
     private String password;
     /**
      * Данные пользователя
      */
     private UserInfo userInfo;
-
-    /**
-     * Аватарка
-     */
-    private MultipartFile avatar;
-
     /**
      * Дата создания
      */
-//    @JsonProperty(
-//            access = JsonProperty.Access.READ_ONLY
-//    )
     private long createdTimestamp;
+    /**
+     * Настройки пользователя
+     */
+    private Setting setting;
+
+    /**
+     * Настройки
+     */
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Setting {
+        /**
+         * Разрешена отправка push уведомлений
+         */
+        private boolean pushEnabled;
+        /**
+         * Разрешена отправка email уведомлений
+         */
+        private boolean emailEnabled;
+    }
+
 }

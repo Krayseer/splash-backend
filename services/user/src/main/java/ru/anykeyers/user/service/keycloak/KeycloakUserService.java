@@ -6,7 +6,6 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.anykeyers.user.config.KeycloakConfig;
@@ -14,7 +13,6 @@ import ru.anykeyers.user.exception.UserNotFoundException;
 import ru.anykeyers.user.exception.UserAlreadyExistsException;
 import ru.anykeyers.user.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.domain.user.UserInfo;
 import ru.krayseer.storageclient.FileStorageClient;
 
 import javax.ws.rs.NotFoundException;
@@ -57,6 +55,14 @@ public class KeycloakUserService implements UserService {
     }
 
     @Override
+    public void addPhoto(User user, MultipartFile photo) {
+        fileStorageClient.uploadPhoto(photo, photoId -> {
+            user.getUserInfo().setPhotoUrl(photoId);
+            updateUser(user);
+        });
+    }
+
+    @Override
     public void updateUser(User user) {
         UserResource userResource = getUserResource(user.getId());
         UserRepresentation keycloakUser = userResource.toRepresentation();
@@ -64,25 +70,13 @@ public class KeycloakUserService implements UserService {
         keycloakUser.setFirstName(user.getUserInfo().getFirstName());
         keycloakUser.setLastName(user.getUserInfo().getLastName());
         keycloakUser.setEmail(user.getUserInfo().getEmail());
-        keycloakUser.setAttributes(keycloakUserMapper.toAttributes(user.getUserInfo()));
+        keycloakUser.setAttributes(keycloakUserMapper.toAttributes(user));
         userResource.update(keycloakUser);
     }
 
     @Override
     public void deleteUser(UUID id) {
         getUsersResource().delete(id.toString());
-    }
-
-    @Override
-    public void addPhoto(User user, MultipartFile photo) {
-        fileStorageClient.uploadPhoto(photo, photoId -> {
-            UserInfo userInfo = user.getUserInfo();
-            userInfo.setPhotoUrl(photoId);
-            UserResource userResource = getUserResource(user.getId());
-            UserRepresentation keycloakUser = userResource.toRepresentation();
-            keycloakUser.setAttributes(keycloakUserMapper.toAttributes(userInfo));
-            userResource.update(keycloakUser);
-        });
     }
 
     private UsersResource getUsersResource() {
