@@ -36,7 +36,6 @@
     <modules>
         <module>gateway</module>
         <module>discovery</module>
-        <module>config-server</module>
         <module>splash-api</module>
         <module>services</module>
     </modules>

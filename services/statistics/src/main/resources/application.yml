@@ -1,5 +1,40 @@
 spring:
   application:
     name: statistics-service
-  config:
-    import: optional:configserver:${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${STATISTICS_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+    template:
+      default-topic: topic
+
+springdoc:
+  api-docs:
+    path: /statistics/v3/api-docs
+  swagger-ui:
+    path: /statistics/swagger-ui.html
+
+server:
+  port: 0
+  error:
+    include-message: always
+

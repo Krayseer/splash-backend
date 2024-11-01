@@ -1,5 +1,106 @@
 spring:
   application:
     name: gateway-service
-  config:
-    import: optional:configserver:${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
+
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_SERVER_URL}/realms/splash
+
+        registration:
+          splash-client:
+            provider: keycloak
+            client-id: ${KEYCLOAK_CLIENT_ID}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      default-filters:
+        - TokenRelay=
+
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            Path=/api/user/**
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            Path=/api/order/**
+
+        - id: configuration-service
+          uri: lb://configuration-service
+          predicates:
+            Path=/api/car-wash/**
+
+        - id: service-of-services
+          uri: lb://service-of-services
+          predicates:
+            Path=/api/service/**
+
+        - id: business-order-service
+          uri: lb://business-order-service
+          predicates:
+            Path=/api/business-order/**
+
+        - id: statistics-service
+          uri: lb://statistics-service
+          predicates:
+            Path=/api/statistics/**
+
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            Path=/api/notification/**
+
+        - id: storage-service
+          uri: lb://storage-service
+          predicates:
+            Path=/api/storage/**
+
+        - id: chat-service
+          uri: lb:ws://chat-service
+          predicates:
+            Path=/api/chat/ws/**
+
+server:
+  port: ${GATEWAY_PORT}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operationsSorter: method
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /order/v3/api-docs
+        name: Order service
+
+      - url: /car-wash/v3/api-docs
+        name: Car wash service
+
+      - url: /business-order/v3/api-docs
+        name: Business order service
+
+      - url: /statistics/v3/api-docs
+        name: Statistics
+
+      - url: /notification/v3/api-docs
+        name: Notification service
+
+      - url: /service/v3/api-docs
+        name: Service of services

@@ -1,5 +1,16 @@
 spring:
   application:
     name: discovery-service
-  config:
-    import: optional:configserver:${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}
+
+eureka:
+  instance:
+    hostname: ${DISCOVERY_HOST}
+
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+server:
+  port: ${DISCOVERY_PORT}

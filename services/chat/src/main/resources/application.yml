@@ -2,5 +2,13 @@ spring:
   application:
     name: chat-service
 
-  config:
-    import: optional:configserver:${CONFIG_SERVER_HOST}:${CONFIG_SERVER_PORT}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
+
+server:
+  port: 0
+  error:
+    include-message: always
