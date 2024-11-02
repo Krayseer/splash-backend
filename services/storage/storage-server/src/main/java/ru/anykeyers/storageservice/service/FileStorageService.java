@@ -6,7 +6,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import ru.anykeyers.storageservice.config.ApplicationConfig;
-import ru.anykeyers.storageservice.domain.FileType;
+import ru.anykeyers.storageproto.FileType;
 import ru.krayseer.storageproto.proto.FileChunk;
 import ru.krayseer.storageproto.proto.FileStorageServiceGrpc;
 import ru.krayseer.storageproto.proto.UploadStatus;
@@ -52,7 +52,7 @@ public class FileStorageService extends FileStorageServiceGrpc.FileStorageServic
             public void onNext(FileChunk chunk) {
                 try {
                     if (fileType == null) {
-                        fileType = FileType.getFileType(chunk.getFormat());
+                        fileType = FileType.valueOf(chunk.getFormat());
                     }
                     outputStream.write(chunk.getContent().toByteArray());
                 } catch (IOException e) {

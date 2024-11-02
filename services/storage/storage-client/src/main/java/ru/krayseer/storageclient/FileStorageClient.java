@@ -5,6 +5,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
 import org.springframework.web.multipart.MultipartFile;
+import ru.anykeyers.storageproto.FileType;
 import ru.krayseer.storageproto.proto.FileChunk;
 import ru.krayseer.storageproto.proto.FileStorageServiceGrpc;
 import ru.krayseer.storageproto.proto.UploadStatus;
@@ -13,9 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
@@ -33,39 +34,55 @@ public class FileStorageClient {
 
     @SneakyThrows
     public void uploadPhotos(List<MultipartFile> files, Consumer<List<String>> callbackFileIds) {
-        List<Future<?>> tasks = new ArrayList<>();
         List<String> fileIds = new ArrayList<>();
-        files.forEach(file -> tasks.add(threadPool.submit(() -> {
-            try {
-                uploadFile(file.getInputStream(), ".jpg", getFileObserver(fileIds::add));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        })));
-        for(Future<?> task : tasks) {
-            task.get();
-        }
+        CountDownLatch latch = new CountDownLatch(files.size());
+        files.forEach(file ->
+                threadPool.submit(() -> {
+                    try {
+                        uploadFile(file.getInputStream(), FileType.PHOTO, asyncStub.uploadFile(new StreamObserver<>() {
+                            @Override
+                            public void onNext(UploadStatus status) {
+                                fileIds.add(status.getFileId());
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                latch.countDown();
+                                throw new RuntimeException(t);
+                            }
+
+                            @Override
+                            public void onCompleted() {
+                                latch.countDown();
+                            }
+                        }));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+        );
+        latch.await();
         callbackFileIds.accept(fileIds);
     }
 
     @SneakyThrows
     public void uploadPhoto(MultipartFile file, Consumer<String> callbackFileId) {
-        uploadFile(file.getInputStream(), ".jpg", getFileObserver(callbackFileId));
+        uploadFile(file.getInputStream(), FileType.PHOTO, getFileObserver(callbackFileId));
     }
 
     @SneakyThrows
     public void uploadVideo(MultipartFile file, Consumer<String> callbackFileId) {
-        uploadFile(file.getInputStream(), ".mp4", getFileObserver(callbackFileId));
+        uploadFile(file.getInputStream(), FileType.VIDEO, getFileObserver(callbackFileId));
     }
 
     @SneakyThrows
-    private void uploadFile(InputStream fileStream, String format, StreamObserver<FileChunk> observer) {
+    private void uploadFile(InputStream fileStream, FileType fileType, StreamObserver<FileChunk> observer) {
         byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = fileStream.read(buffer)) != -1) {
             FileChunk chunk = FileChunk.newBuilder()
                     .setContent(ByteString.copyFrom(buffer, 0, bytesRead))
-                    .setFormat(format)
+                    .setFormat(fileType.name())
                     .build();
             observer.onNext(chunk);
         }

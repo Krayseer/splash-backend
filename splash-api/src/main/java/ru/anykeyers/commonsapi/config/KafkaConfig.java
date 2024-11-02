@@ -27,6 +27,9 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
+    @Value("${spring.kafka.consumer.group-id}")
+    private String groupId;
+
     @Bean
     public <V> ConcurrentKafkaListenerContainerFactory<String, V> kafkaListenerContainerFactory(ConsumerFactory<String, V> cf) {
         var factory = new ConcurrentKafkaListenerContainerFactory<String, V>();
@@ -39,6 +42,8 @@ public class KafkaConfig {
         Map<String, Object> props = new HashMap<>();
         var deserializer = new JsonDeserializer<V>(objectMapper).trustedPackages("*");
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");

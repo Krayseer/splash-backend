@@ -3,7 +3,6 @@ package ru.anykeyers.notificationservice.processor.employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
@@ -32,7 +31,7 @@ class EmployeeNotificationCreator {
         ConfigurationDTO configuration = employee.getConfiguration();
         return new Notification(
                 messages.getMessage("employee.invitation.apply.subject"),
-                messages.getMessage("employee.invitation.apply", configuration.getOrganizationInfo().getName(), configuration.getAddress().getAddress())
+                messages.getMessage("employee.invitation.apply", configuration.getOrganizationInfo().getName(), configuration.getId()) //todo: второй аргумент = address
         );
     }
 
@@ -54,10 +53,10 @@ class EmployeeNotificationCreator {
      * Создать уведомление о назначении работника на заказ
      */
     public Notification createNotificationEmployeeOrderApply(OrderDTO order) {
-        ConfigurationInfoDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
+        ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
         return new Notification(
                 messages.getMessage("order.employee.apply.subject"),
-                messages.getMessage("order.employee.apply", configuration.getAddress(), order.getStartTime())
+                messages.getMessage("order.employee.apply", configuration.getOrganizationInfo().getName(), order.getStartTime()) //todo: второй аргумент = address
         );
     }
 

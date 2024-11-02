@@ -9,6 +9,7 @@ import ru.anykeyers.configurationservice.service.EmployeeService;
 import ru.anykeyers.configurationservice.web.ControllerName;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +22,7 @@ public class EmployeeController {
 
     @Operation(summary = "Получить список работников автомойки")
     @GetMapping("/{carWashId}")
-    public List<User> getEmployees(@PathVariable Long carWashId) {
+    public Set<User> getEmployees(@PathVariable Long carWashId) {
         return employeeService.getCarWashEmployees(carWashId);
     }
 

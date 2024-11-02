@@ -1,8 +1,6 @@
 package ru.anykeyers.commonsapi.domain.configuration;
 
-import jakarta.validation.constraints.Null;
 import lombok.*;
-import ru.anykeyers.commonsapi.validation.OnCreate;
 
 /**
  * Информация об организации
@@ -20,7 +18,7 @@ public class OrganizationInfo {
     /**
      * Тип организации
      */
-    private TypeOrganization typeOrganization;
+    private Type type;
     /**
      * Почта
      */
@@ -28,22 +26,27 @@ public class OrganizationInfo {
     /**
      * Название
      */
-    @Null(
-            groups = OnCreate.class
-    )
     private String name;
     /**
      * Описание
      */
-    @Null(
-            groups = OnCreate.class
-    )
     private String description;
     /**
      * Номер телефона
      */
-    @Null(
-            groups = OnCreate.class
-    )
     private String phoneNumber;
+
+    /**
+     * Тип организации
+     */
+    public enum Type {
+        /**
+         * ООО
+         */
+        OOO,
+        /**
+         * ИП
+         */
+        IP
+    }
 }

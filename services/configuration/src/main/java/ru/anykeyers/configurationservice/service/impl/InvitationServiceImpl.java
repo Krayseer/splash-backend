@@ -3,16 +3,13 @@ package ru.anykeyers.configurationservice.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.user.User;
+import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.dto.InvitationDTO;
 import ru.anykeyers.configurationservice.domain.invitation.InvitationState;
-import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.domain.invitation.Invitation;
-import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundException;
 import ru.anykeyers.configurationservice.exception.InvitationNotFoundException;
-import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.repository.InvitationRepository;
 import ru.anykeyers.configurationservice.service.EmployeeService;
 import ru.anykeyers.configurationservice.service.InvitationService;
@@ -27,13 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InvitationServiceImpl implements InvitationService {
 
-    private final ModelMapper modelMapper;
-
     private final EmployeeService employeeService;
 
     private final InvitationRepository invitationRepository;
 
-    private final ConfigurationRepository configurationRepository;
+    private final ConfigurationService configurationService;
 
     @Override
     public List<Invitation> getInvitations(User user) {
@@ -52,11 +47,12 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void addInvitation(InvitationDTO invitationDTO) {
-        Configuration configuration = configurationRepository.findById(invitationDTO.getCarWashId()).orElseThrow(
-                () -> new ConfigurationNotFoundException(invitationDTO.getCarWashId())
-        );
-        Invitation invitation = modelMapper.map(invitationDTO, Invitation.class);
-        invitation.setConfiguration(configuration);
+        Invitation invitation = Invitation.builder()
+                .userId(invitationDTO.getUserId())
+                .invitationState(InvitationState.SENT)
+                .roles(invitationDTO.getRoles())
+                .configuration(configurationService.getConfiguration(invitationDTO.getCarWashId()))
+                .build();
         invitationRepository.save(invitation);
         log.info("Send invitation: {}", invitation);
     }

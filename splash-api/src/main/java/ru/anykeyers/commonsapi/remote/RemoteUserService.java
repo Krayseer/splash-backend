@@ -23,7 +23,7 @@ public interface RemoteUserService {
     @GetMapping("/by-id/{id}")
     User getUser(@PathVariable("id") UUID id);
 
-    //TODO: реализовать в том числе в контроллере
-    @GetMapping
-    Set<User> getUsers(Set<UUID> employees);
+    @GetMapping("/by-ids/{ids}")
+    Set<User> getUsers(@PathVariable Set<UUID> ids);
+
 }

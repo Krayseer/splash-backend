@@ -9,7 +9,6 @@ import ru.anykeyers.businessorderservice.processor.OrderProcessor;
 import ru.anykeyers.businessorderservice.processor.OrderProcessorFactory;
 import ru.anykeyers.commonsapi.MessageQueue;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 
@@ -20,12 +19,9 @@ import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 @Component
 @RequiredArgsConstructor
 @KafkaListener(
-        topics = MessageQueue.ORDER_CREATE,
-        groupId = OrderHandler.GROUP_ID
+        topics = MessageQueue.ORDER_CREATE
 )
 public class OrderHandler {
-
-    public static final String GROUP_ID = "business-order-group";
 
     private final OrderProcessorFactory orderProcessorFactory;
 
@@ -36,7 +32,7 @@ public class OrderHandler {
      */
     @KafkaHandler
     public void receiveOrderCreate(OrderDTO order) {
-        ConfigurationInfoDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
+        ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
         OrderProcessor processor = orderProcessorFactory.getProcessor(configuration.getOrderProcessMode());
         if (processor == null) {
             throw new RuntimeException("No order process mode configured");

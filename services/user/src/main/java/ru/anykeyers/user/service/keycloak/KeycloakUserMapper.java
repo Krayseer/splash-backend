@@ -8,10 +8,7 @@ import ru.anykeyers.user.config.KeycloakConfig;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.user.UserInfo;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Маппер для пользователя Keycloak
@@ -48,7 +45,11 @@ class KeycloakUserMapper {
      * Создать пользователя Keycloak
      */
     public UserRepresentation toKeycloakUser(User user) {
-        UserRepresentation keycloakUser = modelMapper.map(user, UserRepresentation.class);
+        UserRepresentation keycloakUser = new UserRepresentation();
+        keycloakUser.setUsername(user.getUsername());
+        keycloakUser.setEmail(user.getUserInfo().getEmail());
+        keycloakUser.setFirstName(user.getUserInfo().getFirstName());
+        keycloakUser.setLastName(user.getUserInfo().getLastName());
         keycloakUser.setAttributes(toAttributes(user));
         keycloakUser.setCredentials(keycloakConfigurator.createPasswordCredentials(user.getPassword()));
         keycloakUser.setEnabled(true);
@@ -59,13 +60,18 @@ class KeycloakUserMapper {
      * Преобразовать поля пользователя в атрибуты
      */
     public Map<String, List<String>> toAttributes(User user) {
-        return Map.of(
-                PHONE_NUMBER_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhoneNumber()),
-                PHOTO_URL_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhotoUrl()),
-                PUSH_ENABLED_ATTRIBUTE, Collections.singletonList(Boolean.toString(user.getSetting().isPushEnabled())),
-                EMAIL_ENABLED_ATTRIBUTE, Collections.singletonList(Boolean.toString(user.getSetting().isEmailEnabled()))
-
-        );
+        HashMap<String, List<String>> attrs = new HashMap<>();
+        if (user.getUserInfo() != null) {
+            attrs.put(PHONE_NUMBER_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhoneNumber()));
+            attrs.put(PHOTO_URL_ATTRIBUTE, Collections.singletonList(user.getUserInfo().getPhotoUrl()));
+        }
+        attrs.put(PUSH_ENABLED_ATTRIBUTE, Collections.singletonList(
+                Boolean.toString(user.getSetting() == null || user.getSetting().isPushEnabled())
+        ));
+        attrs.put(EMAIL_ENABLED_ATTRIBUTE, Collections.singletonList(
+                Boolean.toString(user.getSetting() == null || user.getSetting().isEmailEnabled())
+        ));
+        return attrs;
     }
 
     private void fillUser(User user, Map<String, List<String>> attributes) {

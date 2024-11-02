@@ -6,13 +6,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
+import ru.anykeyers.commonsapi.domain.configuration.OrganizationInfo;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundException;
 import ru.anykeyers.configurationservice.exception.UserNotFoundConfigurationException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 import ru.krayseer.storageclient.FileStorageClient;
 
 import java.util.List;
@@ -59,18 +61,25 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public void registerConfiguration(User user, ConfigurationDTO configurationDTO) {
-        Configuration configuration = modelMapper.map(configurationDTO, Configuration.class);
+    public void registerConfiguration(User user, ConfigurationRegisterRequest registerRequest) {
+        OrganizationInfo organizationInfo = modelMapper.map(registerRequest, OrganizationInfo.class);
+        Configuration configuration = Configuration.builder()
+                .userId(user.getId())
+                .organizationInfo(organizationInfo)
+                .build();
         configurationRepository.save(configuration);
     }
 
     @Override
-    public void updateConfiguration(ConfigurationDTO configurationDTO) {
-        Configuration updatedConfiguration = modelMapper.map(configurationDTO, Configuration.class);
-        configurationRepository.save(updatedConfiguration);
-        uploadConfigurationVideo(updatedConfiguration, configurationDTO.getVideo());
-        uploadConfigurationPhotos(updatedConfiguration, configurationDTO.getPhotos());
-        log.info("Update configuration: {}", updatedConfiguration);
+    public void updateConfiguration(User user, ConfigurationUpdateRequest updateRequest) {
+        Configuration configuration = getConfiguration(user);
+        configuration.setOpenTime(updateRequest.getOpenTime());
+        configuration.setCloseTime(updateRequest.getCloseTime());
+        configuration.setOrganizationInfo(modelMapper.map(updateRequest, OrganizationInfo.class));
+        uploadConfigurationPhotos(configuration, updateRequest.getPhotos());
+        uploadConfigurationVideo(configuration, updateRequest.getVideo());
+        configurationRepository.save(configuration);
+        log.info("Update configuration: {}", configuration);
     }
 
     @Override

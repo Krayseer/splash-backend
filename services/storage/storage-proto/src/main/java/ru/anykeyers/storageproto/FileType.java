@@ -1,12 +1,8 @@
-package ru.anykeyers.storageservice.domain;
-
-import com.amazonaws.util.StringUtils;
-import lombok.Getter;
+package ru.anykeyers.storageproto;
 
 /**
  * Тип файла
  */
-@Getter
 public enum FileType {
     /**
      * Картинка
@@ -23,8 +19,7 @@ public enum FileType {
         this.format = format;
     }
 
-    public static FileType getFileType(String format) {
-        return StringUtils.isNullOrEmpty(format) ? null : FileType.valueOf(format);
+    public String getFormat() {
+        return format;
     }
-
 }

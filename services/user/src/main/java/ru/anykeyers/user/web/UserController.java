@@ -9,6 +9,7 @@ import ru.anykeyers.user.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.utils.JwtUtils;
 
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -31,6 +32,11 @@ public class UserController {
     @GetMapping("/by-id/{id}")
     public User getUser(@PathVariable UUID id) {
         return userService.getUser(id);
+    }
+
+    @GetMapping("/by-ids/{ids}")
+    public Set<User> getUsers(@PathVariable Set<UUID> ids) {
+        return userService.getUsers(ids);
     }
 
     @PostMapping

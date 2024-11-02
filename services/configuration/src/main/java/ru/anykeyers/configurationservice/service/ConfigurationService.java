@@ -1,8 +1,9 @@
 package ru.anykeyers.configurationservice.service;
 
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Configuration;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,17 +42,17 @@ public interface ConfigurationService {
     /**
      * Зарегистрировать автомойку
      *
-     * @param user              пользователь, регистрирующий автомойку
-     * @param configurationDTO  данные для регистрации автомойки
+     * @param user             пользователь, регистрирующий автомойку
+     * @param registerRequest  данные для регистрации автомойки
      */
-    void registerConfiguration(User user, ConfigurationDTO configurationDTO);
+    void registerConfiguration(User user, ConfigurationRegisterRequest registerRequest);
 
     /**
      * Обновить данные об автомойке
      *
-     * @param configurationDTO обновлённая конфигурация автомойки
+     * @param updateRequest обновлённая конфигурация автомойки
      */
-    void updateConfiguration(ConfigurationDTO configurationDTO);
+    void updateConfiguration(User user, ConfigurationUpdateRequest updateRequest);
 
     /**
      * Удалить конфигурацию автомойки

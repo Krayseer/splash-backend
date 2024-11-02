@@ -18,7 +18,7 @@ public class EmployeeMessageListener {
     /**
      * Слушатель одобрения заявки работника
      */
-//    @KafkaListener(topics = MessageQueue.EMPLOYEE_INVITATION_APPLY)
+    @KafkaListener(topics = MessageQueue.EMPLOYEE_INVITATION_APPLY)
     public void receiveApplyInvitation(EmployeeDTO employee) {
         employeeProcessor.processEmployeeInvitationApply(employee);
     }
@@ -26,7 +26,7 @@ public class EmployeeMessageListener {
     /**
      * Слушатель события назначения работника заказу
      */
-//    @KafkaListener(topics = MessageQueue.EMPLOYEE_ORDER_APPLY)
+    @KafkaListener(topics = MessageQueue.EMPLOYEE_ORDER_APPLY)
     public void receiveOrderApplyEmployee(OrderDTO order) {
         employeeProcessor.processOrderEmployeeApply(order);
     }

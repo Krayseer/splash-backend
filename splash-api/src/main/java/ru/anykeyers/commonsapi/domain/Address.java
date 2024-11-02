@@ -1,26 +1,26 @@
 package ru.anykeyers.commonsapi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * Адрес
  */
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
     /**
      * Долгота
      */
-    String longitude;
+    private String longitude;
     /**
      * Широта
      */
-    String latitude;
+    private String latitude;
     /**
      * Название улицы
      */
-    String address;
+    private String address;
 }

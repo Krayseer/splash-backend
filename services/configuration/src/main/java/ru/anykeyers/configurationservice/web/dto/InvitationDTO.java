@@ -1,5 +1,6 @@
 package ru.anykeyers.configurationservice.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +13,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvitationDTO {
+
+    @JsonProperty(
+            access = JsonProperty.Access.READ_ONLY
+    )
+    private Long id;
+
     private UUID userId;
+
     private Long carWashId;
+
     private List<String> roles;
 
-    private Long id;
+    @JsonProperty(
+            access = JsonProperty.Access.READ_ONLY
+    )
     private InvitationState invitationState;
+
 }

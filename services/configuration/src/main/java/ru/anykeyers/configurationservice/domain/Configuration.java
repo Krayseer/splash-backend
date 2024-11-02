@@ -3,6 +3,7 @@ package ru.anykeyers.configurationservice.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import ru.anykeyers.commonsapi.domain.Address;
 import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
 import ru.anykeyers.commonsapi.domain.configuration.OrganizationInfo;
 
@@ -39,17 +40,18 @@ public class Configuration {
     @Embedded
     private OrganizationInfo organizationInfo;
     /**
-     * Адрес организации
+     * Адрес
      */
-    private String address;
+    @Embedded
+    private Address address;
     /**
      * Время открытия
      */
-    private Instant openTime;
+    private String openTime;
     /**
      * Время закрытия
      */
-    private Instant closeTime;
+    private String closeTime;
     /**
      * Список боксов
      */

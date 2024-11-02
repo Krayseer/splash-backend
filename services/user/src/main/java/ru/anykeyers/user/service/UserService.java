@@ -3,6 +3,7 @@ package ru.anykeyers.user.service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.anykeyers.commonsapi.domain.user.User;
 
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -23,6 +24,13 @@ public interface UserService {
      * @param username имя пользователя
      */
     User getUser(String username);
+
+    /**
+     * Получить список пользователей
+     *
+     * @param ids идентификатор пользователей
+     */
+    Set<User> getUsers(Set<UUID> ids);
 
     /**
      * Добавить пользователя
@@ -52,5 +60,4 @@ public interface UserService {
      * @param photo фотография
      */
     void addPhoto(User user, MultipartFile photo);
-
 }

@@ -11,6 +11,13 @@ import java.util.List;
 public interface BoxService {
 
     /**
+     * Получить бокс
+     *
+     * @param boxId идентификатор бокса
+     */
+    Box getBox(Long boxId);
+
+    /**
      * Получить список боксов для автомойки
      *
      * @param carWashId идентификатор автоомойки

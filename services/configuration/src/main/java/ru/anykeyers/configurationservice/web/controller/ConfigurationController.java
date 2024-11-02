@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.utils.JwtUtils;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationInfoDTO;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
+import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 import ru.anykeyers.configurationservice.web.mapper.ConfigurationMapper;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.ControllerName;
@@ -27,35 +28,36 @@ public class ConfigurationController {
 
     @Operation(summary = "Получить конфигурацию автомойки авторизованного пользователя")
     @GetMapping
-    public ConfigurationInfoDTO getUserConfiguration(@AuthenticationPrincipal Jwt jwt) {
-        return configurationMapper.toFullDTO(configurationService.getConfiguration(JwtUtils.extractUser(jwt)));
+    public ConfigurationDTO getUserConfiguration(@AuthenticationPrincipal Jwt jwt) {
+        return configurationMapper.toDTO(configurationService.getConfiguration(JwtUtils.extractUser(jwt)));
     }
 
     @Operation(summary = "Получить конфигурацию автомойки по идентификатору")
     @GetMapping("/{id}")
-    public ConfigurationInfoDTO getConfigurationById(@PathVariable Long id) {
-        return configurationMapper.toFullDTO(configurationService.getConfiguration(id));
+    public ConfigurationDTO getConfigurationById(@PathVariable Long id) {
+        return configurationMapper.toDTO(configurationService.getConfiguration(id));
     }
 
     @Operation(summary = "Получить список всех автомоек")
     @GetMapping("/all")
-    public List<ConfigurationInfoDTO> getAllConfigurations() {
+    public List<ConfigurationDTO> getAllConfigurations() {
         return configurationService.getAllConfigurations().stream()
-                .map(configurationMapper::toFullDTO)
+                .map(configurationMapper::toDTO)
                 .toList();
     }
 
     @Operation(summary = "Сохранить конфигурацию автомойки")
     @PostMapping
     public void saveConfiguration(@AuthenticationPrincipal Jwt jwt,
-                                  @RequestBody ConfigurationDTO configurationDTO) {
-        configurationService.registerConfiguration(JwtUtils.extractUser(jwt), configurationDTO);
+                                  @RequestBody ConfigurationRegisterRequest registerRequest) {
+        configurationService.registerConfiguration(JwtUtils.extractUser(jwt), registerRequest);
     }
 
     @Operation(summary = "Обновить конфигурацию автомойки")
     @PutMapping
-    public void updateConfiguration(@ModelAttribute ConfigurationDTO configurationDTO) {
-        configurationService.updateConfiguration(configurationDTO);
+    public void updateConfiguration(@AuthenticationPrincipal Jwt jwt,
+                                    @ModelAttribute ConfigurationUpdateRequest updateRequest) {
+        configurationService.updateConfiguration(JwtUtils.extractUser(jwt), updateRequest);
     }
 
     @Operation(summary = "Удалить конфигурацию автомойки")

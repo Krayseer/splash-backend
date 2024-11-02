@@ -11,13 +11,11 @@ import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.domain.Employee;
-import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundException;
-import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.repository.EmployeeRepository;
+import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.service.EmployeeService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,17 +36,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    private final ConfigurationRepository configurationRepository;
+    private final ConfigurationService configurationService;
 
     @Override
-    public List<User> getCarWashEmployees(Long carWashId) {
-        Configuration configuration = configurationRepository.findById(carWashId).orElseThrow(
-                () -> new ConfigurationNotFoundException(carWashId)
-        );
+    public Set<User> getCarWashEmployees(Long carWashId) {
+        Configuration configuration = configurationService.getConfiguration(carWashId);
         Set<UUID> employees = employeeRepository.findByConfiguration(configuration).stream()
                 .map(Employee::getUserId)
                 .collect(Collectors.toSet());
-        return new ArrayList<>(remoteUserService.getUsers(employees)); //TODO: ПОПРАВИТЬ НА SET
+        return employees.isEmpty() ? Collections.EMPTY_SET : remoteUserService.getUsers(employees);
     }
 
     @Override
@@ -62,9 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(Long carWashId, UUID userId) {
-        Configuration configuration = configurationRepository.findById(carWashId).orElseThrow(
-                () -> new ConfigurationNotFoundException(carWashId)
-        );
+        Configuration configuration = configurationService.getConfiguration(carWashId);
         employeeRepository.deleteByConfigurationAndUserId(configuration, userId);
     }
 

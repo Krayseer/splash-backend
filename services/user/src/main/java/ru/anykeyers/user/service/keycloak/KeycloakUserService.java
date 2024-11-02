@@ -8,6 +8,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.anykeyers.user.config.KeycloakConfig;
 import ru.anykeyers.user.exception.UserNotFoundException;
 import ru.anykeyers.user.exception.UserAlreadyExistsException;
@@ -17,7 +18,9 @@ import ru.krayseer.storageclient.FileStorageClient;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,11 +49,17 @@ public class KeycloakUserService implements UserService {
     }
 
     @Override
+    public Set<User> getUsers(Set<UUID> ids) {
+        return ids.stream().map(this::getUser).collect(Collectors.toSet());
+    }
+
+    @Override
     public void addUser(User user) {
         UserRepresentation keycloakUser = keycloakUserMapper.toKeycloakUser(user);
         Response response = getUsersResource().create(keycloakUser);
-        if (HttpStatus.valueOf(response.getStatus()) == HttpStatus.CONFLICT) {
-            throw new UserAlreadyExistsException(user.getUsername());
+        switch (HttpStatus.valueOf(response.getStatus())) {
+            case CONFLICT -> throw new UserAlreadyExistsException(keycloakUser.getUsername());
+            case FORBIDDEN -> throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
 

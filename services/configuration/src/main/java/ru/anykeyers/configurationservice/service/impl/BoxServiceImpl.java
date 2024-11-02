@@ -2,9 +2,9 @@ package ru.anykeyers.configurationservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
+import ru.anykeyers.configurationservice.exception.BoxNotFoundException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.domain.Box;
 import ru.anykeyers.configurationservice.domain.Configuration;
@@ -21,11 +21,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoxServiceImpl implements BoxService {
 
-    private final ModelMapper modelMapper;
-
     private final BoxRepository boxRepository;
 
     private final ConfigurationService configurationService;
+
+    @Override
+    public Box getBox(Long boxId) {
+        return boxRepository.findById(boxId).orElseThrow(() -> new BoxNotFoundException(boxId));
+    }
 
     @Override
     public List<Box> getCarWashBoxes(Long carWashId) {
@@ -35,14 +38,18 @@ public class BoxServiceImpl implements BoxService {
 
     @Override
     public void addBox(BoxDTO boxDTO) {
-        Box box = modelMapper.map(boxDTO, Box.class);
+        Box box = Box.builder()
+                .name(boxDTO.getName())
+                .configuration(configurationService.getConfiguration(boxDTO.getCarWashId()))
+                .build();
         boxRepository.save(box);
         log.info("Add box: {}", box);
     }
 
     @Override
     public void updateBox(BoxDTO boxDTO) {
-        Box box = modelMapper.map(boxDTO, Box.class);
+        Box box = getBox(boxDTO.getId());
+        box.setName(boxDTO.getName());
         boxRepository.save(box);
         log.info("Update box: {}", box);
     }
