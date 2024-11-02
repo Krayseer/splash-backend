@@ -22,9 +22,6 @@ import java.util.List;
 class ServiceBatchProcessorTest {
 
     @Mock
-    private RemoteServicesService remoteServicesService;
-
-    @Mock
     private ServiceMetricRepository serviceMetricRepository;
 
     @InjectMocks
@@ -39,10 +36,8 @@ class ServiceBatchProcessorTest {
                 new ServiceDTO(1L, "service1", 2000, 250),
                 new ServiceDTO(2L, "service2", 3000, 500)
         );
-        List<Long> serviceIds = List.of(1L, 2L);
-        OrderDTO orderDTO = OrderDTO.builder().serviceIds(serviceIds).build();
+        OrderDTO orderDTO = OrderDTO.builder().services(services).build();
         orderDTO.setCarWashId(2L);
-        Mockito.when(remoteServicesService.getServices(serviceIds)).thenReturn(services);
 
         serviceBatchProcessor.getProcessTask(orderDTO).run();
 

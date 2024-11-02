@@ -3,6 +3,7 @@ package ru.anykeyers.orderservice.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import ru.anykeyers.commonsapi.config.KafkaConfig;
 import ru.anykeyers.commonsapi.config.RemoteConfig;
 import ru.anykeyers.commonsapi.config.WebConfig;
 
@@ -11,6 +12,6 @@ import ru.anykeyers.commonsapi.config.WebConfig;
  */
 @Configuration
 @EnableScheduling
-@Import({ WebConfig.class, RemoteConfig.class })
+@Import({ WebConfig.class, RemoteConfig.class, KafkaConfig.class })
 public class ApplicationConfig {
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.anykeyers.commonsapi.MessageQueue;
 import ru.anykeyers.commonsapi.domain.Interval;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
@@ -17,6 +18,7 @@ import ru.anykeyers.orderservice.domain.exception.OrderNotFoundException;
 import ru.anykeyers.orderservice.calculator.OrderCalculator;
 import ru.anykeyers.orderservice.service.OrderService;
 import ru.anykeyers.orderservice.web.dto.OrderCreateRequest;
+import ru.anykeyers.orderservice.web.mapper.OrderMapper;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -39,6 +41,8 @@ public class OrderServiceImpl implements OrderService {
     private final OrderCalculator orderCalculator;
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    private final OrderMapper orderMapper;
 
     @Override
     public Order getOrder(Long id) {
@@ -128,8 +132,8 @@ public class OrderServiceImpl implements OrderService {
                 )
         );
         Order savedOrder = orderRepository.save(order);
-//        kafkaTemplate.send(MessageQueue.ORDER_CREATE, modelMapper.map(savedOrder, OrderDTO.class));
-        log.info("Save new order: {}", order);
+        kafkaTemplate.send(MessageQueue.ORDER_CREATE, orderMapper.toDTO(savedOrder));
+        log.info("Save new order: {}", savedOrder);
         return savedOrder;
     }
 
