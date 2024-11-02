@@ -3,6 +3,7 @@ package ru.anykeyers.orderservice.service;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.orderservice.domain.Order;
+import ru.anykeyers.orderservice.web.dto.OrderCreateRequest;
 
 import java.util.List;
 
@@ -28,12 +29,12 @@ public interface UserOrderService {
     /**
      * Создать заказ
      *
-     * @param username  имя пользователя
-     * @param orderDTO  данные о заказе
+     * @param username      имя пользователя
+     * @param createRequest данные о заказе
      *
      * @return обработанный заказ
      */
-    Order createOrder(User username, OrderDTO orderDTO);
+    Order createOrder(User username, OrderCreateRequest createRequest);
 
     /**
      * Удалить заказ

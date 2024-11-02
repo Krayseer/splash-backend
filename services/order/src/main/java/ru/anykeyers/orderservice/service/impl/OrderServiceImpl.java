@@ -2,13 +2,11 @@ package ru.anykeyers.orderservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.anykeyers.commonsapi.domain.Interval;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
-import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
 import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
@@ -18,6 +16,7 @@ import ru.anykeyers.orderservice.domain.Order;
 import ru.anykeyers.orderservice.domain.exception.OrderNotFoundException;
 import ru.anykeyers.orderservice.calculator.OrderCalculator;
 import ru.anykeyers.orderservice.service.OrderService;
+import ru.anykeyers.orderservice.web.dto.OrderCreateRequest;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -32,8 +31,6 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-
-    private final ModelMapper modelMapper;
 
     private final RemoteConfigurationService remoteConfigurationService;
 
@@ -116,10 +113,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order createOrder(User user, OrderDTO orderDTO) {
-        Order order = modelMapper.map(orderDTO, Order.class);
-        order.setUserId(user.getId());
-        order.setEndTime(orderCalculator.calculateOrderEndTime(orderDTO));
+    public Order createOrder(User user, OrderCreateRequest createRequest) {
+        Order order = Order.builder()
+                .userId(user.getId())
+                .carWashId(createRequest.getCarWashId())
+                .serviceIds(createRequest.getServiceIds())
+                .typePayment(createRequest.getPaymentType())
+                .startTime(createRequest.getStartTime())
+                .endTime(orderCalculator.calculateOrderEndTime(createRequest.getStartTime(), createRequest.getServiceIds()))
+                .build();
         order.setBoxId(
                 orderCalculator.findFreeBox(
                         order.getCarWashId(), getCarWashOrders(order.getCarWashId()), order.getStartTime(), order.getEndTime()
@@ -127,7 +129,7 @@ public class OrderServiceImpl implements OrderService {
         );
         Order savedOrder = orderRepository.save(order);
 //        kafkaTemplate.send(MessageQueue.ORDER_CREATE, modelMapper.map(savedOrder, OrderDTO.class));
-        log.info("Save new order: {}", orderDTO);
+        log.info("Save new order: {}", order);
         return savedOrder;
     }
 

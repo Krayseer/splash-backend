@@ -11,26 +11,28 @@ import ru.anykeyers.commonsapi.remote.RemoteServicesService;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.orderservice.domain.Order;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class OrderMapper {
 
     private final ModelMapper modelMapper;
 
-    private final RemoteConfigurationService remoteConfigurationService;
-
-    private final RemoteUserService remoteUserService;
-
     private final RemoteServicesService remoteServicesService;
+
+    private final RemoteConfigurationService remoteConfigurationService;
 
     public OrderDTO toDTO(Order order) {
         OrderDTO dto = modelMapper.map(order, OrderDTO.class);
         ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
-        User user = remoteUserService.getUser(order.getUserId());
         dto.setBox(configuration.getBoxes().stream().filter(x -> x.getId().equals(order.getBoxId())).findFirst().orElse(null));
-        dto.setUser(user);
         dto.setServices(remoteServicesService.getServices(order.getServiceIds()));
         return dto;
+    }
+
+    public List<OrderDTO> toDTO(List<Order> orders) {
+        return orders.stream().map(this::toDTO).toList();
     }
 
 }

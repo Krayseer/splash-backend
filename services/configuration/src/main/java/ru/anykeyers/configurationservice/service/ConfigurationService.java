@@ -6,7 +6,6 @@ import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Сервис обработки конфигурации автомойки
@@ -24,13 +23,6 @@ public interface ConfigurationService {
      * @param user пользователь - хозяин автомойки
      */
     Configuration getConfiguration(User user);
-
-    /**
-     * Получить конфигурацию автомойки
-     *
-     * @param userId идентификатор пользователя
-     */
-    Configuration getConfiguration(UUID userId);
 
     /**
      * Получить информацию об автомойке

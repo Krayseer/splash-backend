@@ -1,4 +1,4 @@
-package ru.anykeyers.orderservice.web;
+package ru.anykeyers.orderservice.web.controller;
 
 /**
  * Название контроллера

@@ -17,19 +17,15 @@ import java.util.List;
 @Component
 public class ServiceBatchProcessor extends BaseOrderBatchProcessor<ServiceMetric> {
 
-    private final RemoteServicesService remoteServicesService;
-
-    public ServiceBatchProcessor(ServiceMetricRepository serviceMetricRepository,
-                                 RemoteServicesService remoteServicesService) {
+    public ServiceBatchProcessor(ServiceMetricRepository serviceMetricRepository) {
         super(serviceMetricRepository, ServiceMetric::new);
-        this.remoteServicesService = remoteServicesService;
     }
 
     @Override
     public Runnable getProcessTask(OrderDTO order) {
         return () -> {
             ServiceMetric serviceMetric = getMetric(order.getCarWashId());
-            List<ServiceDTO> services = remoteServicesService.getServices(order.getServiceIds());
+            List<ServiceDTO> services = order.getServices();
             serviceMetric.addSum(services.stream().mapToInt(ServiceDTO::getPrice).sum());
             serviceMetric.addCount(services.size());
         };

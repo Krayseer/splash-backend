@@ -18,7 +18,6 @@ import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 import ru.krayseer.storageclient.FileStorageClient;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,13 +44,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public Configuration getConfiguration(User user) {
-        return getConfiguration(user.getId());
-    }
-
-    @Override
-    public Configuration getConfiguration(UUID userId) {
-        return configurationRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundConfigurationException(userId)
+        return configurationRepository.findByUserId(user.getId()).orElseThrow(
+                () -> new UserNotFoundConfigurationException(user.getId())
         );
     }
 
@@ -76,6 +70,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         configuration.setOpenTime(updateRequest.getOpenTime());
         configuration.setCloseTime(updateRequest.getCloseTime());
         configuration.setOrganizationInfo(modelMapper.map(updateRequest, OrganizationInfo.class));
+        configuration.setOrderProcessMode(updateRequest.getOrderProcessMode());
         uploadConfigurationPhotos(configuration, updateRequest.getPhotos());
         uploadConfigurationVideo(configuration, updateRequest.getVideo());
         configurationRepository.save(configuration);

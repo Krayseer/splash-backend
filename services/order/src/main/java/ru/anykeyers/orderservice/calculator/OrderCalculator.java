@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import ru.anykeyers.commonsapi.domain.Interval;
+import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.commonsapi.remote.RemoteServicesService;
@@ -25,9 +26,9 @@ public class OrderCalculator {
     /**
      * Рассчитать время окончания заказа
      */
-    public long calculateOrderEndTime(OrderDTO orderDTO) {
-        long duration = remoteServicesService.getServicesDuration(orderDTO.getServiceIds());
-        return Instant.ofEpochMilli(orderDTO.getStartTime()).plusMillis(duration).toEpochMilli();
+    public long calculateOrderEndTime(long startTime, List<Long> serviceIds) {
+        long duration = remoteServicesService.getServicesDuration(serviceIds);
+        return Instant.ofEpochMilli(startTime).plusMillis(duration).toEpochMilli();
     }
 
     /**
@@ -57,9 +58,8 @@ public class OrderCalculator {
      */
     public Long findFreeBox(Long carWashId, List<Order> existingOrders, long startTime, long endTime) {
         if (CollectionUtils.isEmpty(existingOrders)) {
-            return 0L;
-//            ConfigurationDTO configurationDTO = remoteConfigurationService.getConfiguration(carWashId);
-//            return configurationDTO.getBoxes().getFirst().getId();
+            ConfigurationDTO configurationDTO = remoteConfigurationService.getConfiguration(carWashId);
+            return configurationDTO.getBoxes().getFirst().getId();
         }
         Map<Long, List<Order>> ordersByBoxId = existingOrders.stream()
                 .collect(Collectors.groupingBy(Order::getBoxId));
