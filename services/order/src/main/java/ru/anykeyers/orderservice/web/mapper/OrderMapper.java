@@ -21,6 +21,8 @@ public class OrderMapper {
 
     private final RemoteServicesService remoteServicesService;
 
+    private final RemoteUserService remoteUserService;
+
     private final RemoteConfigurationService remoteConfigurationService;
 
     public OrderDTO toDTO(Order order) {
@@ -28,6 +30,7 @@ public class OrderMapper {
         ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
         dto.setBox(configuration.getBoxes().stream().filter(x -> x.getId().equals(order.getBoxId())).findFirst().orElse(null));
         dto.setServices(remoteServicesService.getServices(order.getServiceIds()));
+        dto.setUser(remoteUserService.getUser(order.getUserId()));
         return dto;
     }
 

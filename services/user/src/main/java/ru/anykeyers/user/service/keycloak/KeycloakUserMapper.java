@@ -75,12 +75,14 @@ class KeycloakUserMapper {
     }
 
     private void fillUser(User user, Map<String, List<String>> attributes) {
+        UserInfo userInfo = new UserInfo();
         if (attributes.containsKey(PHONE_NUMBER_ATTRIBUTE)) {
-            user.getUserInfo().setPhoneNumber(attributes.get(PHONE_NUMBER_ATTRIBUTE).getFirst());
+            userInfo.setPhoneNumber(attributes.get(PHONE_NUMBER_ATTRIBUTE).getFirst());
         }
         if (attributes.containsKey(PHOTO_URL_ATTRIBUTE)) {
-            user.getUserInfo().setPhotoUrl(attributes.get(PHOTO_URL_ATTRIBUTE).getFirst());
+            userInfo.setPhotoUrl(attributes.get(PHOTO_URL_ATTRIBUTE).getFirst());
         }
+
         User.Setting setting = new User.Setting();
         if (attributes.containsKey(PUSH_ENABLED_ATTRIBUTE)) {
             setting.setPushEnabled(Boolean.parseBoolean(attributes.get(PUSH_ENABLED_ATTRIBUTE).getFirst()));
@@ -88,6 +90,8 @@ class KeycloakUserMapper {
         if (attributes.containsKey(EMAIL_ENABLED_ATTRIBUTE)) {
             setting.setEmailEnabled(Boolean.parseBoolean(attributes.get(EMAIL_ENABLED_ATTRIBUTE).getFirst()));
         }
+
+        user.setUserInfo(userInfo);
         user.setSetting(setting);
     }
 

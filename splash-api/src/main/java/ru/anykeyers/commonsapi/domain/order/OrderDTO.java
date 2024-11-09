@@ -4,9 +4,9 @@ import lombok.*;
 import ru.anykeyers.commonsapi.domain.PaymentType;
 import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
 import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
+import ru.anykeyers.commonsapi.domain.user.User;
 
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ public class OrderDTO {
 
     private Long id;
 
-    private UUID userId;
+    private User user;
 
     private Long carWashId;
 
