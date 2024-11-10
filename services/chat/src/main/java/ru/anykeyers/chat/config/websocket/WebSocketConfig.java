@@ -1,15 +1,13 @@
 package ru.anykeyers.chat.config.websocket;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.server.RequestUpgradeStrategy;
+import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
+import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 /**
  * Конфигурация WebSocket подключения
@@ -17,19 +15,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(CsrfConfigurer::disable)
-                .cors(CorsConfigurer::disable)
-                .build();
-    }
-
-    @Bean
-    public TokenHandshakeInterceptor tokenHandshakeInterceptor() {
-        return new TokenHandshakeInterceptor();
-    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -40,10 +25,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
         registry
                 .addEndpoint("/api/chat/ws")
-                .setAllowedOrigins("*")
-                .addInterceptors(tokenHandshakeInterceptor());
+                .setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
+                .setAllowedOriginPatterns("*");
     }
 
 }

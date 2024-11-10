@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.*;
 import ru.anykeyers.chat.service.SubscriptionService;
@@ -25,20 +26,20 @@ public class WebSocketEventListener {
 
     private final Map<String, UUID> simpSessionIdToSubscriptionId;
 
+    private final JwtDecoder jwtDecoder;
+
     @Autowired
-    public WebSocketEventListener(UserService userService) {
+    public WebSocketEventListener(UserService userService,
+                                  JwtDecoder jwtDecoder) {
         this.userService = userService;
         this.subscriptionService = new SubscriptionService();
         this.simpSessionIdToSubscriptionId = new ConcurrentHashMap<>();
+        this.jwtDecoder = jwtDecoder;
     }
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
-        userService.addOnlineUser(JwtUtils.extractUser(event.getUser()));
-    }
-
-    @EventListener
-    public void handleWebSocketConnectedListener(SessionConnectedEvent event) {
+        jwtDecoder.decode("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNDA1MDM4NCwiZXhwIjoxNzE0MDUwOTg0fQ.0iREafAqZx-H41QU1xQbM5td-0YjYgUjwByeiD0-79w");
         userService.addOnlineUser(JwtUtils.extractUser(event.getUser()));
     }
 

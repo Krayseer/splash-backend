@@ -23,8 +23,6 @@ public class SecurityConfig {
                         // Сервис хранилища
                         .pathMatchers("/api/storage/**").permitAll()
 
-                        .pathMatchers("/api/chat/ws").permitAll()
-
                         // Сервис обработки конфигураций автомоек
                         .pathMatchers("/api/car-wash/configuration/all").permitAll()
 

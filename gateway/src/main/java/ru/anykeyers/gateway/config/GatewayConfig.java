@@ -1,5 +1,8 @@
 package ru.anykeyers.gateway.config;
 
+import org.springframework.cloud.gateway.discovery.DiscoveryLocatorProperties;
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +10,19 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GatewayConfig {
+
+    @Bean
+    public GlobalFilter globalFilter(TokenRelayGatewayFilterFactory factory) {
+        return (exchange, chain) -> factory.apply().filter(exchange, chain);
+    }
+
+    @Bean
+    public DiscoveryLocatorProperties locatorProperties() {
+        DiscoveryLocatorProperties properties = new DiscoveryLocatorProperties();
+        properties.setEnabled(true);
+        properties.setLowerCaseServiceId(true);
+        return properties;
+    }
 
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {

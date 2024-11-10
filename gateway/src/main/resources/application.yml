@@ -19,16 +19,6 @@ spring:
             client-id: ${KEYCLOAK_CLIENT_ID}
             client-secret: ${KEYCLOAK_CLIENT_SECRET}
 
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-
-      default-filters:
-        - TokenRelay=
-
 server:
   port: ${GATEWAY_PORT}
 
