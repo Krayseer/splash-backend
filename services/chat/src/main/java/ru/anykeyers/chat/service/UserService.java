@@ -45,8 +45,6 @@ public class UserService {
             simpMessageSendingOperations.convertAndSend(
                     "/topic/" + id,
                     ChatMessage.builder()
-                            .type(ChatMessage.Type.FRIEND_ONLINE)
-//                            .userConnection(UserConnection.builder().connectionId(userDetails.getId()).build())
                             .build());
         }
         onlineUsers.add(user.getId());
@@ -63,8 +61,6 @@ public class UserService {
             simpMessageSendingOperations.convertAndSend(
                     "/topic/" + id,
                     ChatMessage.builder()
-                            .type(ChatMessage.Type.FRIEND_OFFLINE)
-//                                .userConnection(UserConnection.builder().connectionId(userDetails.getId()).build())
                             .build());
         }
     }

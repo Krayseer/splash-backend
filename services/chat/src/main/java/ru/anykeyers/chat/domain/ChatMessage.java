@@ -1,5 +1,9 @@
 package ru.anykeyers.chat.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.util.UUID;
@@ -9,6 +13,7 @@ import java.util.UUID;
  */
 @Getter
 @Setter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,17 +22,19 @@ public class ChatMessage {
     /**
      * Идентификатор сообщения
      */
-    private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     /**
      * Идентификатор отправителя
      */
-    private UUID sender;
+    private UUID senderId;
 
     /**
      * Идентификатор получателя
      */
-    private UUID receiver;
+    private UUID receiverId;
 
     /**
      * Текст сообщения
@@ -35,26 +42,21 @@ public class ChatMessage {
     private String content;
 
     /**
-     * Тип сообщения
-     */
-    private Type type;
-
-    /**
      * Статус сообщения
      */
     private Status status;
 
-    public enum Type {
-        CHAT,
-        UNSEEN,
-        FRIEND_ONLINE,
-        FRIEND_OFFLINE,
-        MESSAGE_DELIVERY_UPDATE
-    }
-
+    /**
+     * Статус
+     */
     public enum Status {
-        NOT_DELIVERED,
+        /**
+         * Доставлен
+         */
         DELIVERED,
+        /**
+         * Прочитан
+         */
         SEEN
     }
 
