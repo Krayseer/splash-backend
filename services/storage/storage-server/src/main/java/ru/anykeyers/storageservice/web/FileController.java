@@ -26,7 +26,6 @@ public class FileController {
     public ResponseEntity<Resource> loadPhoto(@PathVariable UUID id) {
         return loadFile(id, FileType.PHOTO);
     }
-
     @GetMapping("/video/{id}")
     public ResponseEntity<Resource> loadVideo(@PathVariable UUID id) {
         return loadFile(id, FileType.VIDEO);

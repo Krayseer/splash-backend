@@ -1,7 +1,6 @@
 package ru.krayseer.storageclient;
 
 import com.google.protobuf.ByteString;
-import io.grpc.ManagedChannel;
 import io.grpc.stub.StreamObserver;
 import lombok.SneakyThrows;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +23,16 @@ import java.util.function.Consumer;
  */
 public class FileStorageClient {
 
+    private final ExecutorService threadPool;
+
+    private final StorageProvider storageProvider;
+
     private final FileStorageServiceGrpc.FileStorageServiceStub asyncStub;
 
-    private final ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
-
-    public FileStorageClient(ManagedChannel channel) {
-        asyncStub = FileStorageServiceGrpc.newStub(channel);
+    public FileStorageClient(StorageProvider storageProvider) {
+        this.storageProvider = storageProvider;
+        this.threadPool = Executors.newVirtualThreadPerTaskExecutor();
+        this.asyncStub = FileStorageServiceGrpc.newStub(storageProvider.getChannel());
     }
 
     @SneakyThrows
@@ -42,7 +45,7 @@ public class FileStorageClient {
                         uploadFile(file.getInputStream(), FileType.PHOTO, asyncStub.uploadFile(new StreamObserver<>() {
                             @Override
                             public void onNext(UploadStatus status) {
-                                fileIds.add(status.getFileId());
+                                fileIds.add(getUrl(status.getFileId(), FileType.PHOTO));
                             }
 
                             @Override
@@ -67,12 +70,12 @@ public class FileStorageClient {
 
     @SneakyThrows
     public void uploadPhoto(MultipartFile file, Consumer<String> callbackFileId) {
-        uploadFile(file.getInputStream(), FileType.PHOTO, getFileObserver(callbackFileId));
+        uploadFile(file.getInputStream(), FileType.PHOTO, getFileObserver(callbackFileId, FileType.PHOTO));
     }
 
     @SneakyThrows
     public void uploadVideo(MultipartFile file, Consumer<String> callbackFileId) {
-        uploadFile(file.getInputStream(), FileType.VIDEO, getFileObserver(callbackFileId));
+        uploadFile(file.getInputStream(), FileType.VIDEO, getFileObserver(callbackFileId, FileType.VIDEO));
     }
 
     @SneakyThrows
@@ -89,11 +92,11 @@ public class FileStorageClient {
         observer.onCompleted();
     }
 
-    private StreamObserver<FileChunk> getFileObserver(Consumer<String> callbackFileId) {
+    private StreamObserver<FileChunk> getFileObserver(Consumer<String> callbackFileId, FileType fileType) {
         return asyncStub.uploadFile(new StreamObserver<>() {
             @Override
             public void onNext(UploadStatus status) {
-                callbackFileId.accept(status.getFileId());
+                callbackFileId.accept(getUrl(status.getFileId(), fileType));
             }
 
             @Override
@@ -105,6 +108,10 @@ public class FileStorageClient {
             public void onCompleted() {
             }
         });
+    }
+
+    private String getUrl(String fileId, FileType fileType) {
+        return String.format("%s/%s/%s", storageProvider.getBaseUrl(), fileType.name().toLowerCase(), fileId);
     }
 
 }
