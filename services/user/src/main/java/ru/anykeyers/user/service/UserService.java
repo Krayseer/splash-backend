@@ -12,6 +12,11 @@ import java.util.UUID;
 public interface UserService {
 
     /**
+     * @return список всех пользователей
+     */
+    Set<User> getAllUsers();
+
+    /**
      * Получить пользователя по id
      *
      * @param id идентификатор пользователя

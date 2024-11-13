@@ -34,6 +34,13 @@ public class KeycloakUserService implements UserService {
     private final FileStorageClient fileStorageClient;
 
     @Override
+    public Set<User> getAllUsers() {
+        return getUsersResource().list().stream()
+                .map(keycloakUserMapper::toUser)
+                .collect(Collectors.toSet());
+    }
+
+    @Override
     public User getUser(UUID id) {
         UserRepresentation keycloakUser = getUserResource(id).toRepresentation();
         return keycloakUserMapper.toUser(keycloakUser);

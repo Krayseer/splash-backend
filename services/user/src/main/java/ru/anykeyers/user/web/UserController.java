@@ -19,6 +19,11 @@ public class UserController {
 
     private final UserService userService;
 
+    @GetMapping("/list")
+    public Set<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
     @GetMapping
     public User getUser(@AuthenticationPrincipal Jwt jwt) {
         return JwtUtils.extractUser(jwt);
