@@ -34,14 +34,14 @@ public class StorageConfig {
     }
 
     @Bean
-    public StorageProvider storageProvider() {
+    public StorageProvider storageProvider(ManagedChannel managedChannel) {
         String gatewayUrl = gatewayHost + ":" + gatewayPort;
-        return new StorageProvider(managedChannel(), gatewayUrl + "/api/storage");
+        return new StorageProvider(managedChannel, gatewayUrl + "/api/storage");
     }
 
     @Bean
-    public FileStorageClient fileStorageClient() {
-        return new FileStorageClient(storageProvider());
+    public FileStorageClient fileStorageClient(StorageProvider storageProvider) {
+        return new FileStorageClient(storageProvider);
     }
 
 }

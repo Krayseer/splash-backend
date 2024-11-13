@@ -11,9 +11,7 @@ import ru.anykeyers.chat.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.utils.JwtUtils;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component

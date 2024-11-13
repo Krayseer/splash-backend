@@ -1,5 +1,5 @@
 application:
-  files-path: "C:\\Users\\user\\Documents\\splash_database\\"
+  files-path: ${LOCAL_STORAGE_PATH}
 
   yandex-storage-config:
     bucket-name: ${BUCKET_NAME}

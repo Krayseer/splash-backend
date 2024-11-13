@@ -51,7 +51,9 @@ public class ChatService {
      * @param senderId  идентификатор отправителя
      */
     public List<ChatMessage> getChatMessages(User user, UUID senderId) {
-        return chatRepository.findByReceiverIdAndSenderId(user.getId(), senderId);
+        List<ChatMessage> messages = chatRepository.findByReceiverIdAndSenderId(user.getId(), senderId);
+        processMessagesStatus(senderId, messages);
+        return messages;
     }
 
     /**
@@ -68,12 +70,15 @@ public class ChatService {
         messagingTemplate.convertAndSendToUser(receiverId.toString(), "/queue/messages", message);
     }
 
-    private void processMessagesStatus(List<ChatMessage> messages) {
-        messages.forEach(message -> {
-            if (message.getStatus().equals(ChatMessage.Status.DELIVERED)) {
-                message.setStatus(ChatMessage.Status.SEEN);
-            }
-        });
+    private void processMessagesStatus(UUID senderId, List<ChatMessage> messages) {
+        messages.forEach(message -> processMessageStatus(senderId, message));
+    }
+
+    private void processMessageStatus(UUID senderId, ChatMessage message) {
+        if (!message.getSenderId().equals(senderId) || message.getStatus().equals(ChatMessage.Status.SEEN)) {
+            return;
+        }
+        message.setStatus(ChatMessage.Status.SEEN);
     }
 
 }
