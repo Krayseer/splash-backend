@@ -1,12 +1,7 @@
 package ru.anykeyers.chat.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
 import ru.anykeyers.chat.domain.ChatMessage;
-import ru.anykeyers.chat.repository.ChatRepository;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.remote.RemoteUserService;
 
 import java.util.List;
 import java.util.Set;
@@ -15,70 +10,36 @@ import java.util.UUID;
 /**
  * Сервис обработки чатов
  */
-@Service
-@RequiredArgsConstructor
-public class ChatService {
-
-    private final ChatRepository chatRepository;
-
-    private final SimpMessagingTemplate messagingTemplate;
-
-    private final RemoteUserService remoteUserService;
+public interface ChatService {
 
     /**
-     * Получить список пользователей, которые отправили сообщения
+     * Получить список пользователей, которым были отправлены сообщения
      *
-     * @param user текущий пользователь
+     * @param user пользователь, который отправлял сообщения
      */
-    public Set<User> getChats(User user) {
-        Set<UUID> senderIds = chatRepository.findAllContactUsers(user.getId());
-        return remoteUserService.getUsers(senderIds);
-    }
+    Set<User> getUserChats(User user);
 
     /**
-     * Получить список пользователей, которые отправили сообщения
+     * Получить список пользователей, которые отправляли сообщения владельцу автомойки
      *
-     * @param user текущий пользователь
+     * @param user владелец автомойки
      */
-    public Set<UUID> getChatsIds(User user) {
-        return chatRepository.findAllContactUsers(user.getId());
-    }
+    Set<User> getCarWashOwnerChats(User user);
 
     /**
      * Получить список сообщений чата
      *
      * @param user      пользователь
-     * @param senderId  идентификатор отправителя
+     * @param targetId  идентификатор получателя
      */
-    public List<ChatMessage> getChatMessages(User user, UUID senderId) {
-        List<ChatMessage> messages = chatRepository.findByReceiverIdAndSenderId(user.getId(), senderId);
-        processMessagesStatus(senderId, messages);
-        return messages;
-    }
+    List<ChatMessage> getChatMessages(User user, UUID targetId);
 
     /**
      * Отправить сообщение
      *
-     * @param sender    отправитель
+     * @param user      отправитель
      * @param message   сообщение
      */
-    public void sendMessage(User sender, ChatMessage message) {
-        UUID receiverId = message.getReceiverId();
-        message.setSenderId(sender.getId());
-        message.setStatus(ChatMessage.Status.DELIVERED);
-        chatRepository.save(message);
-        messagingTemplate.convertAndSendToUser(receiverId.toString(), "/queue/messages", message);
-    }
-
-    private void processMessagesStatus(UUID senderId, List<ChatMessage> messages) {
-        messages.forEach(message -> processMessageStatus(senderId, message));
-    }
-
-    private void processMessageStatus(UUID senderId, ChatMessage message) {
-        if (!message.getSenderId().equals(senderId) || message.getStatus().equals(ChatMessage.Status.SEEN)) {
-            return;
-        }
-        message.setStatus(ChatMessage.Status.SEEN);
-    }
+    void sendMessage(User user, ChatMessage message);
 
 }

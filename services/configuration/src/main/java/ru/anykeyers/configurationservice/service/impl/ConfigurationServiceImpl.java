@@ -1,6 +1,8 @@
 package ru.anykeyers.configurationservice.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final FileStorageClient fileStorageClient;
 
+    private final ObjectMapper objectMapper;
+
     private final ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
 
     @Override
@@ -65,11 +69,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
+    @SneakyThrows
     public void updateConfiguration(User user, ConfigurationUpdateRequest updateRequest) {
         Configuration configuration = getConfiguration(user);
         configuration.setOpenTime(updateRequest.getOpenTime());
         configuration.setCloseTime(updateRequest.getCloseTime());
-        configuration.setOrganizationInfo(modelMapper.map(updateRequest, OrganizationInfo.class));
+        OrganizationInfo organizationInfo = objectMapper.readValue(updateRequest.getOrganizationInfo(), OrganizationInfo.class);
+        configuration.setOrganizationInfo(organizationInfo);
         configuration.setOrderProcessMode(updateRequest.getOrderProcessMode());
         uploadConfigurationPhotos(configuration, updateRequest.getPhotos());
         uploadConfigurationVideo(configuration, updateRequest.getVideo());

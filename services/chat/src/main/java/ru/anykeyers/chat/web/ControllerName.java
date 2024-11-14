@@ -8,6 +8,6 @@ public final class ControllerName {
     /**
      * Базовый контроллер
      */
-    public static final String BASE_URL = "/api/chat";
+    public static final String BASE_URL = "/api/rest/chat";
 
 }

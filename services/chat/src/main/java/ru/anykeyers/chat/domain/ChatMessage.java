@@ -31,12 +31,12 @@ public class ChatMessage {
     /**
      * Идентификатор отправителя
      */
-    private UUID senderId;
+    private UUID userId;
 
     /**
      * Идентификатор получателя
      */
-    private UUID receiverId;
+    private UUID targetId;
 
     /**
      * Текст сообщения

@@ -23,8 +23,13 @@ public class RestChatController {
     private final ChatService chatService;
 
     @GetMapping("/chats")
-    public Set<User> getChats(Principal principal) {
-        return chatService.getChats(JwtUtils.extractUser(principal));
+    public Set<User> getUserChats(Principal principal) {
+        return chatService.getUserChats(JwtUtils.extractUser(principal));
+    }
+
+    @GetMapping
+    public Set<User> getCarWashOwnerChats(Principal principal) {
+        return chatService.getCarWashOwnerChats(JwtUtils.extractUser(principal));
     }
 
     @GetMapping("/messages/{senderId}")

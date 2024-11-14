@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ConfigurationUpdateRequest {
 
-    private OrganizationInfo organizationInfo;
+    private String organizationInfo;
 
     private String openTime;
 

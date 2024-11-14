@@ -18,19 +18,26 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
     /**
      * Получить список всех сообщений конкретного чата
      *
-     * @param receiverId    идентификатор получателя
-     * @param senderId      идентификатор отправителя
+     * @param userId    идентификатор получателя
+     * @param targetId  идентификатор отправителя
      */
-    List<ChatMessage> findByReceiverIdAndSenderId(UUID receiverId, UUID senderId);
+    List<ChatMessage> findByUserIdAndTargetId(UUID userId, UUID targetId);
 
     /**
      * Получить список всех чатов, с которым есть взаимодействие у пользователя
      *
      * @param userId идентификатор пользователя
      */
-    @Query("SELECT DISTINCT m.senderId FROM ChatMessage m WHERE m.receiverId = :userId " +
+    @Query("SELECT DISTINCT m.userId FROM ChatMessage m WHERE m.targetId = :userId " +
             "UNION " +
-            "SELECT DISTINCT m.receiverId FROM ChatMessage m WHERE m.senderId = :userId")
+            "SELECT DISTINCT m.targetId FROM ChatMessage m WHERE m.userId = :userId")
     Set<UUID> findAllContactUsers(UUID userId);
+
+
+    @Query("SELECT DISTINCT m.userId FROM ChatMessage m WHERE m.userId = :userId")
+    Set<UUID> findByUserId(UUID userId);
+
+    @Query("SELECT DISTINCT m.targetId FROM ChatMessage m WHERE m.userId = :userId")
+    Set<UUID> findTargetsByUserId(UUID userId);
 
 }

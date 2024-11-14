@@ -75,10 +75,16 @@ public class GatewayConfig {
                                 .uri("lb://storage-service")
                 )
 
-                .route("chat-service",
+                .route("chat-service-socket",
                         r -> r
                                 .path("/api/chat/ws/**")
                                 .uri("lb:ws://chat-service")
+                )
+
+                .route("chat-service-rest",
+                        r -> r
+                                .path("/api/rest/chat/**")
+                                .uri("lb://chat-service")
                 )
                 .build();
     }
