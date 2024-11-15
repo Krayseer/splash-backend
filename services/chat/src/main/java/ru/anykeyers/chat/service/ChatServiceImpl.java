@@ -22,16 +22,12 @@ public class ChatServiceImpl implements ChatService {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public Set<User> getUserChats(User user) {
-        return remoteUserService.getUsers(
-                chatRepository.findByUserId(user.getId())
-        );
+    public Set<UUID> getUserChats(User user) {
+        return chatRepository.findByUserId(user.getId());
     }
 
-    public Set<User> getCarWashOwnerChats(User user) {
-        return remoteUserService.getUsers(
-                chatRepository.findTargetsByUserId(user.getId())
-        );
+    public Set<UUID> getCarWashOwnerChats(User user) {
+        return chatRepository.findTargetsByUserId(user.getId());
     }
 
     public List<ChatMessage> getChatMessages(User user, UUID targetId) {
