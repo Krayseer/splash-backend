@@ -20,6 +20,7 @@ import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 import ru.krayseer.storageclient.FileStorageClient;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,8 +49,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public Configuration getConfiguration(User user) {
-        return configurationRepository.findByUserId(user.getId()).orElseThrow(
-                () -> new UserNotFoundConfigurationException(user.getId())
+        return getConfiguration(user.getId());
+    }
+
+    @Override
+    public Configuration getConfiguration(UUID userId) {
+        return configurationRepository.findByUserId(userId).orElseThrow(
+                () -> new UserNotFoundConfigurationException(userId)
         );
     }
 

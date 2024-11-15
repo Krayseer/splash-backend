@@ -17,14 +17,14 @@ public interface ChatService {
      *
      * @param user пользователь, который отправлял сообщения
      */
-    Set<UUID> getUserChats(User user);
+    Set<User> getUserChats(User user);
 
     /**
      * Получить список пользователей, которые отправляли сообщения владельцу автомойки
      *
      * @param user владелец автомойки
      */
-    Set<UUID> getCarWashOwnerChats(User user);
+    Set<User> getCarWashOwnerChats(User user);
 
     /**
      * Получить список сообщений чата

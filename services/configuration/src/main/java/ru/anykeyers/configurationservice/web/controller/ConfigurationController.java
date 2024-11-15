@@ -15,6 +15,7 @@ import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.ControllerName;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +29,14 @@ public class ConfigurationController {
 
     @Operation(summary = "Получить конфигурацию автомойки авторизованного пользователя")
     @GetMapping
-    public ConfigurationDTO getUserConfiguration(@AuthenticationPrincipal Jwt jwt) {
+    public ConfigurationDTO getCurrentUserConfiguration(@AuthenticationPrincipal Jwt jwt) {
         return configurationMapper.toDTO(configurationService.getConfiguration(JwtUtils.extractUser(jwt)));
+    }
+
+    @Operation(summary = "Получить конфигурацию автомойки пользователя")
+    @GetMapping("/user/{userId}")
+    public ConfigurationDTO getUserConfiguration(@PathVariable UUID userId) {
+        return configurationMapper.toDTO(configurationService.getConfiguration(userId));
     }
 
     @Operation(summary = "Получить конфигурацию автомойки по идентификатору")
