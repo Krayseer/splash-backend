@@ -21,6 +21,9 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
      * @param userId    идентификатор получателя
      * @param targetId  идентификатор отправителя
      */
+    @Query("SELECT DISTINCT m FROM ChatMessage m " +
+            "WHERE (m.targetId = :userId OR m.userId = :userId) " +
+            "OR (m.targetId = :targetId OR m.userId = :targetId)")
     List<ChatMessage> findByUserIdAndTargetId(UUID userId, UUID targetId);
 
     /**
@@ -28,7 +31,7 @@ public interface ChatRepository extends JpaRepository<ChatMessage, Long> {
      *
      * @param userId идентификатор текущего пользователя
      */
-    @Query("SELECT DISTINCT m.userId FROM ChatMessage m WHERE m.userId = :userId")
+    @Query("SELECT DISTINCT m.targetId FROM ChatMessage m WHERE m.userId = :userId")
     Set<UUID> findByUserId(UUID userId);
 
     /**
