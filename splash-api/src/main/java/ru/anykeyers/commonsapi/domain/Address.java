@@ -14,11 +14,11 @@ public class Address {
     /**
      * Долгота
      */
-    private String longitude;
+    private double longitude;
     /**
      * Широта
      */
-    private String latitude;
+    private double latitude;
     /**
      * Название улицы
      */
