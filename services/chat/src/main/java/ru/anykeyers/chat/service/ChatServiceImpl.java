@@ -8,6 +8,7 @@ import ru.anykeyers.chat.repository.ChatRepository;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -23,15 +24,13 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public Set<User> getUserChats(User user) {
-        return remoteUserService.getUsers(
-                chatRepository.findByUserId(user.getId())
-        );
+        var users = chatRepository.findByUserId(user.getId());
+        return users.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(users);
     }
 
     public Set<User> getCarWashOwnerChats(User user) {
-        return remoteUserService.getUsers(
-                chatRepository.findTargetsByUserId(user.getId())
-        );
+        var users = chatRepository.findTargetsByUserId(user.getId());
+        return users.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(users);
     }
 
     public List<ChatMessage> getChatMessages(User user, UUID targetId) {
