@@ -8,10 +8,7 @@ import ru.anykeyers.chat.repository.ChatRepository;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +21,26 @@ public class ChatServiceImpl implements ChatService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public Set<User> getUserChats(User user) {
-        var users = chatRepository.findByUserId(user.getId());
-        return users.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(users);
+        Set<UUID> targetUserIds = chatRepository.findByUserId(user.getId());
+        return targetUserIds.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(targetUserIds);
     }
 
     public Set<User> getCarWashOwnerChats(User user) {
-        var users = chatRepository.findTargetsByUserId(user.getId());
-        return users.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(users);
+        Set<UUID> userIds = chatRepository.findTargetsByUserId(user.getId());
+        return userIds.isEmpty() ? Collections.emptySet() : remoteUserService.getUsers(userIds);
     }
 
     public List<ChatMessage> getChatMessages(User user, UUID targetId) {
         List<ChatMessage> messages = chatRepository.findByUserIdAndTargetId(user.getId(), targetId);
         processMessagesStatus(targetId, messages);
         return messages;
+    }
+
+    public ChatMessage getLastMessage(User user, User target) {
+        List<ChatMessage> messages = chatRepository.findByUserIdAndTargetId(user.getId(), target.getId());
+        return messages.stream()
+                .max(Comparator.comparing(ChatMessage::getCreatedAt))
+                .orElse(null);
     }
 
     public void sendMessage(User user, ChatMessage message) {

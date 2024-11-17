@@ -35,6 +35,14 @@ public interface ChatService {
     List<ChatMessage> getChatMessages(User user, UUID targetId);
 
     /**
+     * Получить последнее сообщение чата
+     *
+     * @param user      пользователь, который отправлял сообщение
+     * @param target    пользователь, которому отправляли сообщение
+     */
+    ChatMessage getLastMessage(User user, User target);
+
+    /**
      * Отправить сообщение
      *
      * @param user      отправитель
