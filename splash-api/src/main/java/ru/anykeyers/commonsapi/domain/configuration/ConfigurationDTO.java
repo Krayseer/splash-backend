@@ -30,6 +30,8 @@ public class ConfigurationDTO {
 
     private List<BoxDTO> boxes;
 
+    private Address address;
+
     private String openTime;
 
     private String closeTime;
