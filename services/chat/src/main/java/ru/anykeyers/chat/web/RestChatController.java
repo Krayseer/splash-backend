@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.anykeyers.chat.domain.ChatMessage;
 import ru.anykeyers.chat.service.ChatService;
 import ru.anykeyers.chat.web.dto.ChatDTO;
+import ru.anykeyers.chat.web.dto.UserChatDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
+import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.commonsapi.utils.JwtUtils;
 
 import java.security.Principal;
@@ -25,10 +27,15 @@ public class RestChatController {
 
     private final ChatService chatService;
 
+    private final RemoteConfigurationService remoteConfigurationService;
+
     @GetMapping("/chats")
-    public Set<ChatDTO> getUserChats(Principal principal) {
+    public Set<UserChatDTO> getUserChats(Principal principal) {
         User user = JwtUtils.extractUser(principal);
-        return getChats(user, () -> chatService.getUserChats(user));
+        Set<User> targetUsers = chatService.getUserChats(user);
+        return targetUsers.stream()
+                .map(target -> new UserChatDTO(chatService.getLastMessage(user, target), remoteConfigurationService.getUserConfiguration(target.getId())))
+                .collect(Collectors.toSet());
     }
 
     @GetMapping
