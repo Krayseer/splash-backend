@@ -24,7 +24,7 @@ public class ConfigurationUpdateRequest {
 
     private List<MultipartFile> photos;
 
-    private Address address;
+    private String address;
 
     private MultipartFile video;
 

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.anykeyers.commonsapi.domain.Address;
 import ru.anykeyers.commonsapi.domain.configuration.OrganizationInfo;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Configuration;
@@ -83,6 +84,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         OrganizationInfo organizationInfo = objectMapper.readValue(updateRequest.getOrganizationInfo(), OrganizationInfo.class);
         configuration.setOrganizationInfo(organizationInfo);
         configuration.setOrderProcessMode(updateRequest.getOrderProcessMode());
+        Address address = objectMapper.readValue(updateRequest.getAddress(), Address.class);
+        configuration.setAddress(address);
         uploadConfigurationPhotos(configuration, updateRequest.getPhotos());
         uploadConfigurationVideo(configuration, updateRequest.getVideo());
         configurationRepository.save(configuration);
