@@ -45,7 +45,7 @@ public class RestChatController {
     private Set<ChatDTO> getChats(User user, Supplier<Set<User>> targetUsersSupplier) {
         Set<User> targetUsers = targetUsersSupplier.get();
         return targetUsers.stream()
-                .map(target -> new ChatDTO(chatService.getLastMessage(user, target), user))
+                .map(target -> new ChatDTO(chatService.getLastMessage(user, target), target))
                 .collect(Collectors.toSet());
     }
 
