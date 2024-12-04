@@ -30,8 +30,7 @@ public class KafkaMessageListener {
      */
     @SneakyThrows
     @KafkaListener(topics = MessageQueue.ORDER_CREATE, groupId = GROUP_ID)
-    public void receiveOrderCreate(String orderMessage) {
-        OrderDTO order = objectMapper.readValue(orderMessage, new TypeReference<>() {});
+    public void receiveOrderCreate(OrderDTO order) {
         statisticsService.processOrder(order);
     }
 

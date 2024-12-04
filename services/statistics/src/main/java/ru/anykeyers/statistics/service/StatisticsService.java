@@ -2,6 +2,7 @@ package ru.anykeyers.statistics.service;
 
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.statistics.domain.CarWashMetric;
+import ru.anykeyers.statistics.domain.Statistics;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface StatisticsService {
      *
      * @param carWashId идентификатор автомойки
      */
-    List<CarWashMetric> getStatistics(Long carWashId);
+    Statistics getStatistics(Long carWashId);
 
     /**
      * Собрать метрики по заказу
