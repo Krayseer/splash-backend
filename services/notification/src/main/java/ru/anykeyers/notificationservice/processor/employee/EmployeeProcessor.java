@@ -43,7 +43,7 @@ class EmployeeProcessor {
      * @param order заказ
      */
     public void processOrderEmployeeApply(OrderDTO order) {
-        User user = remoteUserService.getUser(order.getUserId());
+        User user = remoteUserService.getUser(order.getUser().getId());
         notificationServiceCompound.sendNotification(
                 user, employeeNotificationCreator.createNotificationEmployeeOrderApply(order)
         );

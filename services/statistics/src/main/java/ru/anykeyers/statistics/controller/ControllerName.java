@@ -8,6 +8,6 @@ public final class ControllerName {
     /**
      * Базовый контроллер
      */
-    public static final String BASE_CONTROLLER = "/statistics";
+    public static final String BASE_CONTROLLER = "/api/statistics";
 
 }

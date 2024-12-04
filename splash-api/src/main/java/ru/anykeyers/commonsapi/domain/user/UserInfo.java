@@ -36,10 +36,6 @@ public class UserInfo {
      * URL аватарки
      */
     private String photoUrl;
-    /**
-     * Список ролей
-     */
-    private List<String> roles;
 
     @JsonIgnore
     public String getFullName() {

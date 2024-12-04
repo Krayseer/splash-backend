@@ -28,6 +28,7 @@ public class SecurityConfig {
 
                         // Сервис обработки конфигураций автомоек
                         .pathMatchers("/api/car-wash/configuration/all").permitAll()
+                        .pathMatchers("/api/car-wash/configuration/pdf/**").permitAll()
 
                         .anyExchange().authenticated()
                 )

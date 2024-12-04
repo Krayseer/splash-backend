@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-import ru.anykeyers.commonsapi.domain.Address;
 import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
 
 import java.util.List;

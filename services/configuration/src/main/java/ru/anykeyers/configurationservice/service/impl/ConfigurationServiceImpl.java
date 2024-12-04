@@ -16,10 +16,12 @@ import ru.anykeyers.configurationservice.repository.ConfigurationRepository;
 import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundException;
 import ru.anykeyers.configurationservice.exception.UserNotFoundConfigurationException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
+import ru.anykeyers.configurationservice.service.ReportWriter;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 import ru.krayseer.storageclient.FileStorageClient;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +43,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ObjectMapper objectMapper;
 
+    private final ReportWriter reportWriter;
+
     private final ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
 
     @Override
@@ -51,6 +55,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     @Override
     public Configuration getConfiguration(User user) {
         return getConfiguration(user.getId());
+    }
+
+    @Override
+    @SneakyThrows
+    public ByteArrayOutputStream getConfigurationPdf(UUID userId) {
+        Configuration configuration = getConfiguration(userId);
+        return reportWriter.generateReport(configuration);
     }
 
     @Override

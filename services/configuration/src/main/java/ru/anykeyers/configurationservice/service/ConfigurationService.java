@@ -5,6 +5,7 @@ import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,13 @@ public interface ConfigurationService {
      * @param user пользователь - хозяин автомойки
      */
     Configuration getConfiguration(User user);
+
+    /**
+     * Получить конфигурацию автомойки в PDF формате
+     *
+     * @param userId идентификатор пользователя - хозяина автомойки
+     */
+    ByteArrayOutputStream getConfigurationPdf(UUID userId);
 
     /**
      * Получить конфигурацию автомойки
@@ -60,5 +68,4 @@ public interface ConfigurationService {
      * @param user хозяин автомойки
      */
     void deleteConfiguration(User user);
-
 }

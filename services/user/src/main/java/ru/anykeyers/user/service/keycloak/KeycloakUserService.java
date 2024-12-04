@@ -82,7 +82,6 @@ public class KeycloakUserService implements UserService {
     public void updateUser(User user) {
         UserResource userResource = getUserResource(user.getId());
         UserRepresentation keycloakUser = userResource.toRepresentation();
-        keycloakUser.setCredentials(keycloakConfigurator.createPasswordCredentials(user.getPassword()));
         keycloakUser.setFirstName(user.getUserInfo().getFirstName());
         keycloakUser.setLastName(user.getUserInfo().getLastName());
         keycloakUser.setEmail(user.getUserInfo().getEmail());

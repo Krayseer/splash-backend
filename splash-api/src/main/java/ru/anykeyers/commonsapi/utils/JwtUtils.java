@@ -6,6 +6,7 @@ import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.domain.user.UserInfo;
 
 import java.security.Principal;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -22,6 +23,8 @@ public class JwtUtils {
         return User.builder()
                 .id(UUID.fromString((String) jwt.getClaims().get("sub")))
                 .username((String) jwt.getClaims().get("preferred_username"))
+                .createdTimestamp(((Instant) jwt.getClaims().get("iat")).toEpochMilli())
+                .roles(Arrays.stream(((String) jwt.getClaims().get("scope")).split(" ")).toList())
                 .userInfo(extractUserInfo(jwt))
                 .setting(extractSetting(jwt))
                 .build();
@@ -43,7 +46,6 @@ public class JwtUtils {
                 .email((String) claims.get("email"))
                 .phoneNumber((String) claims.get("phone_number"))
                 .photoUrl((String) claims.get("photo_url"))
-                .roles(Arrays.stream(((String) claims.get("scope")).split(" ")).toList())
                 .build();
     }
 

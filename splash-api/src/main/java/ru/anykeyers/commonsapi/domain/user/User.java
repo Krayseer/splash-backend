@@ -3,6 +3,8 @@ package ru.anykeyers.commonsapi.domain.user;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,8 +35,15 @@ public class User {
      */
     private UserInfo userInfo;
     /**
+     * Список ролей
+     */
+    private List<String> roles;
+    /**
      * Дата создания
      */
+    @JsonProperty(
+            access = JsonProperty.Access.READ_ONLY
+    )
     private long createdTimestamp;
     /**
      * Настройки пользователя

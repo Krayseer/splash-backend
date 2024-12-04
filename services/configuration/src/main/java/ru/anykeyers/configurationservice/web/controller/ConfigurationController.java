@@ -3,6 +3,10 @@ package ru.anykeyers.configurationservice.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,7 @@ import ru.anykeyers.configurationservice.web.mapper.ConfigurationMapper;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.ControllerName;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +36,28 @@ public class ConfigurationController {
     @GetMapping
     public ConfigurationDTO getCurrentUserConfiguration(@AuthenticationPrincipal Jwt jwt) {
         return configurationMapper.toDTO(configurationService.getConfiguration(JwtUtils.extractUser(jwt)));
+    }
+
+    @Operation(summary = "Получить информацию об автомойке в PDF формате")
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> getCurrentUserConfigurationPdf(@AuthenticationPrincipal Jwt jwt) {
+        ByteArrayOutputStream document = configurationService.getConfigurationPdf(JwtUtils.extractUser(jwt).getId());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_carwash.pdf");
+        headers.setContentLength(document.size());
+        return new ResponseEntity<>(document.toByteArray(), headers, HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получить информацию об автомойке в PDF формате")
+    @GetMapping("/pdf/{userId}")
+    public ResponseEntity<byte[]> getCurrentUserConfigurationPdf(@PathVariable UUID userId) {
+        ByteArrayOutputStream document = configurationService.getConfigurationPdf(userId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_carwash.pdf");
+        headers.setContentLength(document.size());
+        return new ResponseEntity<>(document.toByteArray(), headers, HttpStatus.OK);
     }
 
     @Operation(summary = "Получить конфигурацию автомойки пользователя")
