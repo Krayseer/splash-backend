@@ -32,6 +32,13 @@ public interface ServiceProcessor {
     List<ServiceEntity> getServices(List<Long> serviceIds);
 
     /**
+     * Получить историю изменений услуги
+     *
+     * @param serviceId идентификатор услуги
+     */
+    List<ServiceEntity> getServiceHistory(Long serviceId);
+
+    /**
      * Получить длительность выполнения услуг
      *
      * @param serviceIds идентификаторы услуг

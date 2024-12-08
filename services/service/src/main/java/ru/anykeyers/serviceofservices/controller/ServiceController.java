@@ -31,6 +31,12 @@ public class ServiceController {
         return modelMapper.map(serviceProcessor.getService(id), ServiceDTO.class);
     }
 
+    @Operation(summary = "Получить историю изменений услуги")
+    @GetMapping("/{id}/history")
+    public List<ServiceDTO> getServiceHistory(@PathVariable Long id) {
+        return convertToDTO(serviceProcessor.getServiceHistory(id));
+    }
+
     @Operation(summary = "Получить список услуг")
     @GetMapping("/list")
     public List<ServiceDTO> getServices(

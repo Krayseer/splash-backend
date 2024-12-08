@@ -39,6 +39,11 @@ public class ServiceProcessorImpl implements ServiceProcessor {
     }
 
     @Override
+    public List<ServiceEntity> getServiceHistory(Long serviceId) {
+        return serviceRepository.findServicesByIdOrOriginalId(serviceId);
+    }
+
+    @Override
     public long getServicesDuration(List<Long> serviceIds) {
         return getServices(serviceIds).stream().mapToLong(ServiceEntity::getDuration).sum();
     }
@@ -64,7 +69,7 @@ public class ServiceProcessorImpl implements ServiceProcessor {
         serviceRepository.save(currentService);
 
         ServiceEntity updatedService = ServiceEntity.builder()
-                .originalServiceId(currentService.getId())
+                .originalServiceId(currentService.getOriginalServiceId() == null ? currentService.getId() : currentService.getOriginalServiceId())
                 .carWashId(currentService.getCarWashId())
                 .name(serviceDTO.getName())
                 .duration(serviceDTO.getDuration())
@@ -72,6 +77,7 @@ public class ServiceProcessorImpl implements ServiceProcessor {
                 .version(versionGenerator.generateVersion(currentService.getVersion()))
                 .actual(true)
                 .build();
+
         updatedService.setDuration(serviceDTO.getDuration());
         updatedService.setName(serviceDTO.getName());
         updatedService.setPrice(serviceDTO.getPrice());
