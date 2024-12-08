@@ -3,13 +3,16 @@ package ru.anykeyers.configurationservice.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import ru.anykeyers.commonsapi.domain.user.User;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
+import ru.anykeyers.commonsapi.utils.JwtUtils;
 import ru.anykeyers.configurationservice.service.EmployeeService;
 import ru.anykeyers.configurationservice.web.ControllerName;
+import ru.anykeyers.configurationservice.web.mapper.EmployeeMapper;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -20,10 +23,18 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    private final EmployeeMapper employeeMapper;
+
+    @Operation(summary = "Получить список работников автомойки авторизованного пользователя")
+    @GetMapping
+    public List<EmployeeDTO> getUserCarWashEmployees(@AuthenticationPrincipal Jwt jwt) {
+        return employeeMapper.toDTO(employeeService.getCarWashEmployees(JwtUtils.extractUser(jwt)));
+    }
+
     @Operation(summary = "Получить список работников автомойки")
     @GetMapping("/{carWashId}")
-    public Set<User> getEmployees(@PathVariable Long carWashId) {
-        return employeeService.getCarWashEmployees(carWashId);
+    public List<EmployeeDTO> getCarWashEmployees(@PathVariable Long carWashId) {
+        return employeeMapper.toDTO(employeeService.getCarWashEmployees(carWashId));
     }
 
     @Operation(summary = "Уволить работника с автомойки")

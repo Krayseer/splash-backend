@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.invitation.InvitationState;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class InvitationDTO {
     )
     private Long id;
 
-    private UUID userId;
+    private User user;
 
     private Long carWashId;
 

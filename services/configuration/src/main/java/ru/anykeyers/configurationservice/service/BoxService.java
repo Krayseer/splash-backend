@@ -1,6 +1,7 @@
 package ru.anykeyers.configurationservice.service;
 
 import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
+import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Box;
 
 import java.util.List;
@@ -26,8 +27,11 @@ public interface BoxService {
 
     /**
      * Добавить бокс автомойке
+     *
+     * @param user      владелец автомойки
+     * @param boxDTO    данные о боксе
      */
-    void addBox(BoxDTO boxDTO);
+    void addBox(User user, BoxDTO boxDTO);
 
     /**
      * Обновить информацию о боксе

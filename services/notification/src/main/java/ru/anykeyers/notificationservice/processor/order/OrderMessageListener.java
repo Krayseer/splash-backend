@@ -18,15 +18,14 @@ public class OrderMessageListener {
 
     private static final String GROUP_ID = "notification-group";
 
-//    private final OrderProcessor orderProcessor;
+    private final OrderProcessor orderProcessor;
 
     /**
      * Слушатель создания заказов
      */
     @KafkaListener(topics = MessageQueue.ORDER_CREATE, groupId = GROUP_ID)
     public void receiveOrderCreate(OrderDTO order) {
-        System.out.println("Order created: " + order);
-//        orderProcessor.processOrderCreate(order);
+        orderProcessor.processOrderCreate(order);
     }
 
     /**
@@ -35,7 +34,7 @@ public class OrderMessageListener {
     @SneakyThrows
     @KafkaListener(topics = MessageQueue.ORDER_DELETE, groupId = GROUP_ID)
     public void receiveOrderDelete(OrderDTO order) {
-//        orderProcessor.processOrderDelete(order);
+        orderProcessor.processOrderDelete(order);
     }
 
 }

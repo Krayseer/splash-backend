@@ -2,6 +2,7 @@ package ru.anykeyers.configurationservice.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeStatus;
 
 import java.util.UUID;
 
@@ -28,6 +29,11 @@ public class Employee {
      * Имя пользователя
      */
     private UUID userId;
+
+    /**
+     * Статус работника
+     */
+    private EmployeeStatus status = EmployeeStatus.ACTIVE;
 
     /**
      * Автомойка, которой принадлежнит работник

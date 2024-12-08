@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.user.User;
+import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.web.dto.InvitationDTO;
 import ru.anykeyers.configurationservice.domain.invitation.InvitationState;
@@ -41,6 +42,12 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
+    public List<Invitation> getHolderInvitations(User user) {
+        Configuration configuration = configurationService.getConfiguration(user);
+        return getInvitations(configuration.getId());
+    }
+
+    @Override
     public List<Invitation> getInvitations(Long carWashId, InvitationState invitationState) {
         return invitationRepository.findByConfigurationIdAndInvitationState(carWashId, invitationState);
     }
@@ -48,7 +55,7 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public void addInvitation(InvitationDTO invitationDTO) {
         Invitation invitation = Invitation.builder()
-                .userId(invitationDTO.getUserId())
+                .userId(invitationDTO.getUser().getId())
                 .invitationState(InvitationState.SENT)
                 .roles(invitationDTO.getRoles())
                 .configuration(configurationService.getConfiguration(invitationDTO.getCarWashId()))

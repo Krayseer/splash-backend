@@ -1,4 +1,4 @@
-package ru.anykeyers.notificationservice.context;
+package ru.anykeyers.notificationservice.config;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Configuration;

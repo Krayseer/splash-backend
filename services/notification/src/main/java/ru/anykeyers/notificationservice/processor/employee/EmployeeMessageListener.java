@@ -6,7 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import ru.anykeyers.commonsapi.MessageQueue;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
 
 @Slf4j
 @Component

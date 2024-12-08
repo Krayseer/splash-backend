@@ -4,8 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
+import ru.anykeyers.commonsapi.utils.JwtUtils;
 import ru.anykeyers.configurationservice.service.BoxService;
 import ru.anykeyers.configurationservice.web.ControllerName;
 
@@ -31,8 +34,8 @@ public class BoxController {
 
     @Operation(summary = "Добавить бокс автомойке")
     @PostMapping
-    public void addBox(@RequestBody BoxDTO boxDTO) {
-        boxService.addBox(boxDTO);
+    public void addBox(@AuthenticationPrincipal Jwt jwt, @RequestBody BoxDTO boxDTO) {
+        boxService.addBox(JwtUtils.extractUser(jwt), boxDTO);
     }
 
     @Operation(summary = "Обновить бокс у автомойки")

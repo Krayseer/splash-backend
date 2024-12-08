@@ -33,6 +33,14 @@ public class InvitationController {
         );
     }
 
+    @Operation(summary = "Получить список приглашей, отправленных от лица владельца автомойки")
+    @GetMapping("/by-holder")
+    public List<InvitationDTO> getHolderInvitations(@AuthenticationPrincipal Jwt jwt) {
+        return invitationMapper.toDTO(
+                invitationService.getHolderInvitations(JwtUtils.extractUser(jwt))
+        );
+    }
+
     @Operation(summary = "Получить список приглашений, отправленных от лица автомойки")
     @GetMapping("/{carWashId}")
     public List<InvitationDTO> getInvitation(@PathVariable Long carWashId) {

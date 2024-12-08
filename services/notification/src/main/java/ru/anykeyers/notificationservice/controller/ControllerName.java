@@ -3,12 +3,12 @@ package ru.anykeyers.notificationservice.controller;
 /**
  * Название контроллера
  */
-public final class ControllerName {
+final class ControllerName {
 
     /**
      * Базовый контроллер
      */
-    public static final String BASE_CONTROLLER = "/notification";
+    public static final String BASE_CONTROLLER = "/api/notification";
 
     /**
      * Контроллер PUSH уведомлений

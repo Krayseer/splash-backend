@@ -1,8 +1,7 @@
 package ru.anykeyers.serviceofservices.processor;
 
-import ru.anykeyers.serviceofservices.domain.service.ServiceEntity;
-import ru.anykeyers.serviceofservices.domain.service.ServiceCreateRequest;
-import ru.anykeyers.serviceofservices.domain.service.ServiceUpdateRequest;
+import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
+import ru.anykeyers.serviceofservices.domain.ServiceEntity;
 
 import java.util.List;
 
@@ -42,16 +41,17 @@ public interface ServiceProcessor {
     /**
      * Сохранить услугу
      *
-     * @param serviceCreateRequest даннные об услуге
+     * @param carWashId     идентификатор автомойки
+     * @param serviceDTO    даннные об услуге
      */
-    void saveService(ServiceCreateRequest serviceCreateRequest);
+    void saveService(Long carWashId, ServiceDTO serviceDTO);
 
     /**
      * Обновить услугу
      *
-     * @param serviceUpdateRequest обновленные данные об услуге
+     * @param serviceDTO обновленные данные об услуге
      */
-    void updateService(ServiceUpdateRequest serviceUpdateRequest);
+    void updateService(ServiceDTO serviceDTO);
 
     /**
      * Удалить услугу

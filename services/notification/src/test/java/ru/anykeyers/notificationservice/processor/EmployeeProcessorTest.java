@@ -6,7 +6,7 @@
 //import org.mockito.Mock;
 //import org.mockito.Mockito;
 //import org.mockito.junit.jupiter.MockitoExtension;
-//import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
+//import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
 //import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 //import ru.anykeyers.commonsapi.domain.user.UserDTO;
 //import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;

@@ -1,4 +1,4 @@
-package ru.anykeyers.serviceofservices.domain.service;
+package ru.anykeyers.serviceofservices.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +10,7 @@ import lombok.*;
 @Setter
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "SERVICE")
@@ -22,6 +23,12 @@ public class ServiceEntity {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Идентификатор исходной услуги (общий для всех её версий)
+     */
+    @Column(name = "ORIGINAL_SERVICE_ID")
+    private Long originalServiceId;
 
     /**
      * Идентификатор автомойки
@@ -46,5 +53,17 @@ public class ServiceEntity {
      */
     @Column(name = "PRICE")
     private int price;
+
+    /**
+     * Версия услуги
+     */
+    @Column(name = "VERSION")
+    private String version;
+
+    /**
+     * Актуальна ли версия
+     */
+    @Column(name = "IS_CURRENT")
+    private boolean actual;
 
 }

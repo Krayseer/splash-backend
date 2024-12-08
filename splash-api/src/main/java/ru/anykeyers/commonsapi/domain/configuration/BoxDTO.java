@@ -17,9 +17,4 @@ public class BoxDTO {
 
     private String name;
 
-    @JsonProperty(
-            access = JsonProperty.Access.WRITE_ONLY
-    )
-    private Long carWashId;
-
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.BoxDTO;
+import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.exception.BoxNotFoundException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.domain.Box;
@@ -37,10 +38,10 @@ public class BoxServiceImpl implements BoxService {
     }
 
     @Override
-    public void addBox(BoxDTO boxDTO) {
+    public void addBox(User user, BoxDTO boxDTO) {
         Box box = Box.builder()
                 .name(boxDTO.getName())
-                .configuration(configurationService.getConfiguration(boxDTO.getCarWashId()))
+                .configuration(configurationService.getConfiguration(user))
                 .build();
         boxRepository.save(box);
         log.info("Add box: {}", box);

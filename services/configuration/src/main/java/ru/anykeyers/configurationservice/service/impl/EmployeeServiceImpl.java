@@ -2,23 +2,20 @@ package ru.anykeyers.configurationservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.MessageQueue;
-import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.configurationservice.domain.Configuration;
 import ru.anykeyers.configurationservice.domain.Employee;
 import ru.anykeyers.configurationservice.repository.EmployeeRepository;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.service.EmployeeService;
+import ru.anykeyers.configurationservice.web.mapper.EmployeeMapper;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Реализация сервиса обработки работников
@@ -28,30 +25,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final ModelMapper modelMapper;
-
-    private final RemoteUserService remoteUserService;
-
     private final EmployeeRepository employeeRepository;
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
     private final ConfigurationService configurationService;
 
+    private final EmployeeMapper employeeMapper;
+
     @Override
-    public Set<User> getCarWashEmployees(Long carWashId) {
+    public List<Employee> getCarWashEmployees(Long carWashId) {
         Configuration configuration = configurationService.getConfiguration(carWashId);
-        Set<UUID> employees = employeeRepository.findByConfiguration(configuration).stream()
-                .map(Employee::getUserId)
-                .collect(Collectors.toSet());
-        return employees.isEmpty() ? Collections.EMPTY_SET : remoteUserService.getUsers(employees);
+        return employeeRepository.findByConfiguration(configuration);
+    }
+
+    @Override
+    public List<Employee> getCarWashEmployees(User user) {
+        Configuration configuration = configurationService.getConfiguration(user);
+        return getCarWashEmployees(configuration.getId());
     }
 
     @Override
     public void addCarWashEmployee(Configuration configuration, UUID userId) {
         Employee employee = Employee.builder().userId(userId).configuration(configuration).build();
         employeeRepository.save(employee);
-        EmployeeDTO employeeDTO = modelMapper.map(employee, EmployeeDTO.class);
+        EmployeeDTO employeeDTO = employeeMapper.toDTO(employee);
         kafkaTemplate.send(MessageQueue.EMPLOYEE_INVITATION_APPLY, employeeDTO);
         log.info("Add employee to car wash: {}", employee);
     }

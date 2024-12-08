@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.anykeyers.serviceofservices.domain.service.ServiceEntity;
-import ru.anykeyers.serviceofservices.domain.service.ServiceCreateRequest;
+import ru.anykeyers.serviceofservices.domain.ServiceEntity;
 import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
-import ru.anykeyers.serviceofservices.domain.service.ServiceUpdateRequest;
 import ru.anykeyers.serviceofservices.processor.ServiceProcessor;
 
 import java.util.Arrays;
@@ -59,19 +57,20 @@ public class ServiceController {
 
     @Operation(summary = "Сохранить услугу")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("/{carWashId}")
     public void saveService(
-            @Parameter(name = "Данные об услуге") @RequestBody @Valid ServiceCreateRequest serviceCreateRequest
+            @Parameter(name = "Идентификатор автомойки") @PathVariable Long carWashId,
+            @Parameter(name = "Данные об услуге") @RequestBody @Valid ServiceDTO serviceDTO
     ) {
-        serviceProcessor.saveService(serviceCreateRequest);
+        serviceProcessor.saveService(carWashId, serviceDTO);
     }
 
     @Operation(summary = "Обновить услугу")
     @PutMapping
     public void updateService(
-            @Parameter(name = "Обновленные данные об услуге") @Valid @RequestBody ServiceUpdateRequest serviceUpdateRequest
+            @Parameter(name = "Обновленные данные об услуге") @Valid @RequestBody ServiceDTO serviceDTO
     ) {
-       serviceProcessor.updateService(serviceUpdateRequest);
+       serviceProcessor.updateService(serviceDTO);
     }
 
     @Operation(summary = "Удалить услугу")

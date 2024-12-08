@@ -3,7 +3,7 @@ package ru.anykeyers.notificationservice.processor.employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.notificationservice.service.NotificationServiceCompound;
@@ -28,7 +28,7 @@ class EmployeeProcessor {
      */
     public void processEmployeeInvitationApply(EmployeeDTO employee) {
         notificationServiceCompound.sendNotification(
-                remoteUserService.getUser(employee.getUserId()),
+                employee.getUser(),
                 employeeNotificationCreator.createEmployeeInvitationNotification(employee)
         );
         notificationServiceCompound.sendNotification(
@@ -43,9 +43,9 @@ class EmployeeProcessor {
      * @param order заказ
      */
     public void processOrderEmployeeApply(OrderDTO order) {
-        User user = remoteUserService.getUser(order.getUser().getId());
         notificationServiceCompound.sendNotification(
-                user, employeeNotificationCreator.createNotificationEmployeeOrderApply(order)
+                order.getUser(),
+                employeeNotificationCreator.createNotificationEmployeeOrderApply(order)
         );
     }
 

@@ -1,12 +1,12 @@
 package ru.anykeyers.serviceofservices.processor;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.anykeyers.serviceofservices.domain.service.ServiceUpdateRequest;
+import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
 import ru.anykeyers.serviceofservices.repository.ServiceRepository;
-import ru.anykeyers.serviceofservices.domain.service.ServiceEntity;
-import ru.anykeyers.serviceofservices.domain.service.ServiceCreateRequest;
+import ru.anykeyers.serviceofservices.domain.ServiceEntity;
 import ru.anykeyers.serviceofservices.domain.exception.ServiceNotFoundException;
 
 import java.util.List;
@@ -21,6 +21,8 @@ public class ServiceProcessorImpl implements ServiceProcessor {
 
     private final ServiceRepository serviceRepository;
 
+    private final VersionGenerator versionGenerator;
+
     @Override
     public ServiceEntity getService(Long serviceId) {
         return serviceRepository.findById(serviceId).orElseThrow(() -> new ServiceNotFoundException(serviceId));
@@ -28,7 +30,7 @@ public class ServiceProcessorImpl implements ServiceProcessor {
 
     @Override
     public List<ServiceEntity> getServices(Long carWashId) {
-        return serviceRepository.findByCarWashId(carWashId);
+        return serviceRepository.findByCarWashIdAndActualTrue(carWashId);
     }
 
     @Override
@@ -42,25 +44,39 @@ public class ServiceProcessorImpl implements ServiceProcessor {
     }
 
     @Override
-    public void saveService(ServiceCreateRequest serviceCreateRequest) {
+    public void saveService(Long carWashId, ServiceDTO serviceDTO) {
         ServiceEntity service = ServiceEntity.builder()
-                .carWashId(serviceCreateRequest.getCarWashId())
-                .name(serviceCreateRequest.getName())
-                .duration(serviceCreateRequest.getDuration())
-                .price(serviceCreateRequest.getPrice())
+                .carWashId(carWashId)
+                .name(serviceDTO.getName())
+                .duration(serviceDTO.getDuration())
+                .price(serviceDTO.getPrice())
+                .actual(true)
                 .build();
         serviceRepository.save(service);
-        log.info("Saving service: {}", service);
+        log.info("Add new service: {}", service);
     }
 
     @Override
-    public void updateService(ServiceUpdateRequest serviceUpdateRequest) {
-        ServiceEntity service = getService(serviceUpdateRequest.getId());
-        service.setDuration(serviceUpdateRequest.getDuration());
-        service.setName(serviceUpdateRequest.getName());
-        service.setPrice(serviceUpdateRequest.getPrice());
-        serviceRepository.save(service);
-        log.info("Updating service: {}", service);
+    @Transactional
+    public void updateService(ServiceDTO serviceDTO) {
+        ServiceEntity currentService = getService(serviceDTO.getId());
+        currentService.setActual(false);
+        serviceRepository.save(currentService);
+
+        ServiceEntity updatedService = ServiceEntity.builder()
+                .originalServiceId(currentService.getId())
+                .carWashId(currentService.getCarWashId())
+                .name(serviceDTO.getName())
+                .duration(serviceDTO.getDuration())
+                .price(serviceDTO.getPrice())
+                .version(versionGenerator.generateVersion(currentService.getVersion()))
+                .actual(true)
+                .build();
+        updatedService.setDuration(serviceDTO.getDuration());
+        updatedService.setName(serviceDTO.getName());
+        updatedService.setPrice(serviceDTO.getPrice());
+        serviceRepository.save(updatedService);
+        log.info("Update service: {}", updatedService);
     }
 
     @Override

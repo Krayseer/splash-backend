@@ -2,7 +2,7 @@ package ru.anykeyers.serviceofservices.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.anykeyers.serviceofservices.domain.service.ServiceEntity;
+import ru.anykeyers.serviceofservices.domain.ServiceEntity;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
      *
      * @param id идентификатор автомойки
      */
-    List<ServiceEntity> findByCarWashId(Long id);
+    List<ServiceEntity> findByCarWashIdAndActualTrue(Long id);
 
     /**
      * Получить список услуг

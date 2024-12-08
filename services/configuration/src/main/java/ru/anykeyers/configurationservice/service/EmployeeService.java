@@ -2,9 +2,9 @@ package ru.anykeyers.configurationservice.service;
 
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.configurationservice.domain.Configuration;
+import ru.anykeyers.configurationservice.domain.Employee;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -17,7 +17,14 @@ public interface EmployeeService {
      *
      * @param carWashId идентификатор автомойки
      */
-    Set<User> getCarWashEmployees(Long carWashId);
+    List<Employee> getCarWashEmployees(Long carWashId);
+
+    /**
+     * Получить список работников автомойки
+     *
+     * @param user пользователь, владелец автомойки
+     */
+    List<Employee> getCarWashEmployees(User user);
 
     /**
      * Добавить работника автомойке

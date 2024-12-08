@@ -29,6 +29,13 @@ public interface InvitationService {
     /**
      * Получить список приглашений автомойки
      *
+     * @param user владелец автомойки
+     */
+    List<Invitation> getHolderInvitations(User user);
+
+    /**
+     * Получить список приглашений автомойки
+     *
      * @param carWashId         идентификатор автомойки
      * @param invitationState   статус приглашения
      */
@@ -61,5 +68,4 @@ public interface InvitationService {
      * @param id идентификатор приглашения
      */
     void deleteInvitation(Long id);
-
 }

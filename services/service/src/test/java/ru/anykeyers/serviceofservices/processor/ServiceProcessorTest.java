@@ -8,7 +8,7 @@
 //import org.springframework.http.HttpStatus;
 //import ru.anykeyers.serviceofservices.domain.service.ServiceUpdateRequest;
 //import ru.anykeyers.serviceofservices.repository.ServiceRepository;
-//import ru.anykeyers.serviceofservices.domain.service.ServiceEntity;
+//import ru.anykeyers.serviceofservices.domain.ServiceEntity;
 //import ru.anykeyers.serviceofservices.domain.service.ServiceCreateRequest;
 //import ru.anykeyers.serviceofservices.domain.exception.ServiceNotFoundException;
 //

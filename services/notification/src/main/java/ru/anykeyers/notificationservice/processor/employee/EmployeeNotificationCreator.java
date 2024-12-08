@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.domain.user.EmployeeDTO;
+import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
@@ -20,8 +20,6 @@ class EmployeeNotificationCreator {
 
     private final Messages messages;
 
-    private final RemoteUserService remoteUserService;
-
     private final RemoteConfigurationService remoteConfigurationService;
 
     /**
@@ -31,7 +29,7 @@ class EmployeeNotificationCreator {
         ConfigurationDTO configuration = employee.getConfiguration();
         return new Notification(
                 messages.getMessage("employee.invitation.apply.subject"),
-                messages.getMessage("employee.invitation.apply", configuration.getOrganizationInfo().getName(), configuration.getId()) //todo: второй аргумент = address
+                messages.getMessage("employee.invitation.apply", configuration.getOrganizationInfo().getName(), configuration.getAddress().getAddress())
         );
     }
 
@@ -39,13 +37,13 @@ class EmployeeNotificationCreator {
      * Создать уведомление хозяину автомойки о новом работнике
      */
     public Notification createCarWashOwnerNotificationEmployeeApplyInvitation(EmployeeDTO employee) {
-        User employeeAsUser = remoteUserService.getUser(employee.getUserId());
+        User employeeAsUser = employee.getUser();
         return new Notification(
                 messages.getMessage("car-wash.owner.invitation.apply.subject"),
                 messages.getMessage("car-wash.owner.invitation.apply",
                         employeeAsUser.getUserInfo().getFullName(),
                         employeeAsUser.getUsername(),
-                        employeeAsUser.getUserInfo().getRoles())
+                        employeeAsUser.getRoles())
         );
     }
 
@@ -56,7 +54,7 @@ class EmployeeNotificationCreator {
         ConfigurationDTO configuration = remoteConfigurationService.getConfiguration(order.getCarWashId());
         return new Notification(
                 messages.getMessage("order.employee.apply.subject"),
-                messages.getMessage("order.employee.apply", configuration.getOrganizationInfo().getName(), order.getStartTime()) //todo: второй аргумент = address
+                messages.getMessage("order.employee.apply", configuration.getOrganizationInfo().getName(), configuration.getAddress().getAddress())
         );
     }
 
