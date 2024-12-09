@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.orderservice.domain.Order;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
 
@@ -21,7 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, PagingAndSo
     /**
      * Получить список заказов по статусу
      *
-     * @param orderState    статус заказа
+     * @param orderState статус заказа
      */
     List<Order> findByState(OrderState orderState);
 
@@ -55,7 +54,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>, PagingAndSo
      * @param carWashId идентификатор автомойки
      * @param status    статус заказа
      */
-    int countByCarWashIdAndState(Long carWashId, OrderState status);
+    long countByCarWashIdAndState(Long carWashId, OrderState status);
 
     /**
      * Получить список заказов автомойки пользователя

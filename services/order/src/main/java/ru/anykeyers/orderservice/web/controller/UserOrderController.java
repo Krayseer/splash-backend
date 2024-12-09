@@ -31,15 +31,6 @@ public class UserOrderController {
     private final UserOrderService userOrderService;
 
     @Operation(summary = "Получить все активные заказы пользователя")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Получение списка заказов пользователя",
-                    content = {
-                            @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = OrderDTO.class))
-                    })
-    })
     @GetMapping("/active")
     public List<OrderDTO> getActiveOrders(@AuthenticationPrincipal Jwt jwt) {
         return orderMapper.toDTO(
@@ -61,13 +52,6 @@ public class UserOrderController {
     public OrderDTO createOrder(@AuthenticationPrincipal Jwt jwt, @RequestBody OrderCreateRequest createRequest) {
         Order order = userOrderService.createOrder(JwtUtils.extractUser(jwt), createRequest);
         return orderMapper.toDTO(order);
-    }
-
-    @Operation(summary = "Удалить заказ пользователя")
-    @DeleteMapping("/{orderId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long orderId) {
-        userOrderService.deleteOrder(orderId);
     }
 
 }

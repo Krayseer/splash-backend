@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Тесты для {@link StatisticsService}
+ */
 @ExtendWith(MockitoExtension.class)
 class StatisticsServiceTest {
 

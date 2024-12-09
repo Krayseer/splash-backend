@@ -5,11 +5,10 @@ import ru.anykeyers.orderservice.domain.Order;
 
 import java.util.List;
 
-
 /**
  * Сервис обработки заказов
  */
-public interface OrderService extends UserOrderService, CarWashService {
+public interface OrderService {
 
     /**
      * Получить информацию о заказе
@@ -30,7 +29,7 @@ public interface OrderService extends UserOrderService, CarWashService {
      *
      * @param orderState статус заказа
      */
-    List<Order> getOrders(OrderState orderState);
+    List<Order> getOrdersByState(OrderState orderState);
 
     /**
      * Сохранить заказ
@@ -38,5 +37,12 @@ public interface OrderService extends UserOrderService, CarWashService {
      * @param order заказ
      */
     void saveOrUpdate(Order order);
+
+    /**
+     * Удалить заказ
+     *
+     * @param orderId   идентификатор заказа
+     */
+    void deleteOrder(Long orderId);
 
 }

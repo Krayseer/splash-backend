@@ -2,14 +2,9 @@ package ru.anykeyers.orderservice.calculator;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import ru.anykeyers.commonsapi.domain.Interval;
-import ru.anykeyers.commonsapi.domain.configuration.ConfigurationDTO;
-import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.commonsapi.remote.RemoteServicesService;
 import ru.anykeyers.orderservice.domain.Order;
-import ru.anykeyers.orderservice.domain.exception.BoxFreeNotFoundException;
 
 import java.time.Instant;
 import java.util.*;
@@ -20,8 +15,6 @@ import java.util.stream.Collectors;
 public class OrderCalculator {
 
     private final RemoteServicesService remoteServicesService;
-
-    private final RemoteConfigurationService remoteConfigurationService;
 
     /**
      * Рассчитать время окончания заказа
@@ -38,7 +31,10 @@ public class OrderCalculator {
      * @param startTime     начало
      * @param endTime       конец
      */
-    public Set<Interval> getOrderFreeTimes(List<Order> carWashOrders, long startTime, long endTime) {
+    public Set<Interval> calculateOrderFreeTimes(List<Order> carWashOrders, long startTime, long endTime) {
+        if (carWashOrders.isEmpty()) {
+            return Collections.singleton(Interval.of(startTime, endTime));
+        }
         Map<Long, List<Order>> filteredOrdersByBoxId = carWashOrders.stream()
                 .filter(o -> o.getStartTime() >= startTime)
                 .filter(o -> o.getStartTime() <= endTime)
@@ -49,33 +45,10 @@ public class OrderCalculator {
                 .collect(Collectors.toSet());
     }
 
-    /**
-     * Найти свободный бокс
-     *
-     * @param existingOrders    актуальные заказы
-     * @param startTime         начало даты
-     * @param endTime           конец даты
-     */
-    public Long findFreeBox(Long carWashId, List<Order> existingOrders, long startTime, long endTime) {
-        if (CollectionUtils.isEmpty(existingOrders)) {
-            ConfigurationDTO configurationDTO = remoteConfigurationService.getConfiguration(carWashId);
-            return configurationDTO.getBoxes().getFirst().getId();
-        }
-        Map<Long, List<Order>> ordersByBoxId = existingOrders.stream()
-                .collect(Collectors.groupingBy(Order::getBoxId));
-        Interval orderInterval = Interval.of(startTime, endTime);
-        return ordersByBoxId.entrySet().stream()
-                .filter(entry -> entry.getValue().stream()
-                        .noneMatch(r -> orderInterval.isInRange(r.getStartTime()) || orderInterval.isInRange(r.getEndTime())))
-                .findFirst()
-                .orElseThrow(BoxFreeNotFoundException::new)
-                .getKey();
-    }
-
     private List<Interval> getOrdersAsIntervals(List<Order> orders) {
-        return orders.stream()
+        return new ArrayList<>(orders.stream()
                 .map(order -> new Interval(order.getStartTime(), order.getEndTime()))
-                .toList();
+                .toList());
     }
 
     private List<Interval> findFreeIntervals(List<Interval> busyIntervals, long startTime, long endTime) {

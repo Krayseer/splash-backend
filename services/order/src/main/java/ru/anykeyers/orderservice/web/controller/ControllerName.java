@@ -3,7 +3,7 @@ package ru.anykeyers.orderservice.web.controller;
 /**
  * Название контроллера
  */
-public final class ControllerName {
+final class ControllerName {
 
     /**
      * Базовое название контроллеров

@@ -38,9 +38,20 @@ public class OrderService {
 
     /**
      * Получить список всех заказов работника
+     *
+     * @param user работник
      */
-    public List<OrderDTO> getOrders(String username) {
-        List<BusinessOrder> businessOrders = businessOrderRepository.findByEmployeeId(UUID.randomUUID());//TODO доделать
+    public List<OrderDTO> getOrders(User user) {
+        return getOrders(user.getId());
+    }
+
+    /**
+     * Получить список всех заказов работника
+     *
+     * @param userId идентификатор работника
+     */
+    public List<OrderDTO> getOrders(UUID userId) {
+        List<BusinessOrder> businessOrders = businessOrderRepository.findByEmployeeId(userId);
         return remoteOrderService.getOrders(businessOrders.stream().map(BusinessOrder::getOrderId).toList());
     }
 
@@ -51,7 +62,7 @@ public class OrderService {
      */
     public List<User> getFreeEmployees(Long orderId) {
         OrderDTO order = remoteOrderService.getOrder(orderId);
-        return new ArrayList<>(remoteUserService.getUsers(getFreeEmployees(order))); //TODO: ПОПРАВИТЬ НА SET
+        return new ArrayList<>(remoteUserService.getUsers(getFreeEmployees(order)));
     }
 
     /**
@@ -67,6 +78,17 @@ public class OrderService {
                 .build();
         businessOrderRepository.save(businessOrder);
         log.info("Appoint order employee '{}' for order '{}'", employeeId, orderId);
+    }
+
+    /**
+     * Назначить работника на заказ
+     *
+     * @param order       идентификатор заказа
+     * @param employeeId    идентификатор работника
+     */
+    public void appointOrderEmployee(OrderDTO order, UUID employeeId) {
+        appointOrderEmployee(order.getId(), employeeId);
+        kafkaTemplate.send(MessageQueue.EMPLOYEE_ORDER_APPLY, order);
     }
 
     /**

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.configuration.employee.EmployeeDTO;
-import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.commonsapi.remote.RemoteUserService;
 import ru.anykeyers.notificationservice.service.NotificationServiceCompound;
 

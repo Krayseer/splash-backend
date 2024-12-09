@@ -3,6 +3,7 @@ package ru.anykeyers.orderservice.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.orderservice.service.OrderService;
@@ -33,6 +34,13 @@ public class OrderController {
         return orderMapper.toDTO(
                 orderService.getOrders(Arrays.stream(orderIds).toList())
         );
+    }
+
+    @Operation(summary = "Удалить заказ пользователя")
+    @DeleteMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrder(@PathVariable Long orderId) {
+        orderService.deleteOrder(orderId);
     }
 
 }

@@ -9,10 +9,11 @@ import ru.anykeyers.commonsapi.utils.DateUtils;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
 import ru.anykeyers.commonsapi.domain.Interval;
-import ru.anykeyers.orderservice.service.CarWashService;
+import ru.anykeyers.orderservice.service.CarWashOrderService;
 import ru.anykeyers.orderservice.web.mapper.OrderMapper;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -23,7 +24,7 @@ public class CarWashOrderController {
 
     private final OrderMapper orderMapper;
 
-    private final CarWashService orderService;
+    private final CarWashOrderService orderService;
 
     @Operation(summary = "Получить список заказов автомойки")
     @GetMapping("/{carWashId}")
@@ -63,36 +64,12 @@ public class CarWashOrderController {
         );
     }
 
-    @Operation(summary = "Получить количество заказов, ожидающих одобрения")
-    @GetMapping("/wait-confirm/count")
-    public int getWaitConfirmOrdersCount(
+    @Operation(summary = "Получить карту соответствия заказов в зависимости от статуса заказа")
+    @GetMapping("/count")
+    public Map<OrderState, Long> getOrdersCount(
             @Parameter(description = "Идентификатор автомойки") @RequestParam("carWashId") Long carWashId
     ) {
-        return orderService.getOrdersCount(carWashId, OrderState.WAIT_CONFIRM);
-    }
-
-    @Operation(summary = "Получить количество активных заказов автомойки")
-    @GetMapping("/active/count")
-    public int getActiveOrdersCount(
-            @Parameter(description = "Идентификатор автомойки") @RequestParam("carWashId") Long carWashId
-    ) {
-        return orderService.getOrdersCount(carWashId, OrderState.WAIT_PROCESS);
-    }
-
-    @Operation(summary = "Получить количество заказов, находящихся в обработке")
-    @GetMapping("/processing/count")
-    public int getProcessingOrdersCount(
-            @Parameter(description = "Идентификатор автомойки") @RequestParam("carWashId") Long carWashId
-    ) {
-        return orderService.getOrdersCount(carWashId, OrderState.PROCESSING);
-    }
-
-    @Operation(summary = "Получить количество обработанных заказов")
-    @GetMapping("/processed/count")
-    public int getProcessedOrdersCount(
-            @Parameter(description = "Идентификатор автомойки") @RequestParam("carWashId") Long carWashId
-    ) {
-        return orderService.getOrdersCount(carWashId, OrderState.PROCESSED);
+        return orderService.getOrdersCountByState(carWashId);
     }
 
 }

@@ -72,7 +72,7 @@ public class OrderStateProcessor {
      * @param consumer      обработчик
      */
     private void verify(OrderState orderState, Consumer<Order> consumer) {
-        List<Order> orders = orderService.getOrders(orderState);
+        List<Order> orders = orderService.getOrdersByState(orderState);
         if (orders.isEmpty()) {
             return;
         }

@@ -31,4 +31,10 @@ public class InvitationDTO {
     )
     private InvitationState invitationState;
 
+    public InvitationDTO(User user, Long carWashId, List<String> roles) {
+        this.user = user;
+        this.carWashId = carWashId;
+        this.roles = roles;
+    }
+
 }

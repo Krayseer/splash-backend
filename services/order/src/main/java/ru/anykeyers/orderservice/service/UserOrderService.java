@@ -1,6 +1,5 @@
 package ru.anykeyers.orderservice.service;
 
-import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.orderservice.domain.Order;
 import ru.anykeyers.orderservice.web.dto.OrderCreateRequest;
@@ -35,12 +34,5 @@ public interface UserOrderService {
      * @return обработанный заказ
      */
     Order createOrder(User username, OrderCreateRequest createRequest);
-
-    /**
-     * Удалить заказ
-     *
-     * @param orderId   идентификатор заказа
-     */
-    void deleteOrder(Long orderId);
 
 }

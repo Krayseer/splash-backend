@@ -3,7 +3,6 @@ package ru.anykeyers.notificationservice.processor.order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.notificationservice.service.NotificationServiceCompound;
 
 /**
@@ -12,8 +11,6 @@ import ru.anykeyers.notificationservice.service.NotificationServiceCompound;
 @Service
 @RequiredArgsConstructor
 class OrderProcessor {
-
-    private final RemoteConfigurationService remoteConfigurationService;
 
     private final OrderNotificationCreator orderNotificationCreator;
 

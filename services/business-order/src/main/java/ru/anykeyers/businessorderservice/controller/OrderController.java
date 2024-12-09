@@ -11,8 +11,10 @@ import ru.anykeyers.businessorderservice.domain.BusinessOrderRequest;
 import ru.anykeyers.businessorderservice.service.OrderService;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 import ru.anykeyers.commonsapi.domain.user.User;
+import ru.anykeyers.commonsapi.utils.JwtUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +27,13 @@ public class OrderController {
     @Operation(summary = "Получить список заказов текущего работника")
     @GetMapping("/employee")
     public List<OrderDTO> getCurrentEmployeeOrders(@AuthenticationPrincipal Jwt jwt) {
-        return orderService.getOrders(jwt.getSubject());
+        return orderService.getOrders(JwtUtils.extractUser(jwt));
     }
 
     @Operation(summary = "Получить список заказов работника")
-    @GetMapping("/{username}")
-    public List<OrderDTO> getEmployeeOrders(@PathVariable String username) {
-        return orderService.getOrders(username);
+    @GetMapping("/{userId}")
+    public List<OrderDTO> getEmployeeOrders(@PathVariable UUID userId) {
+        return orderService.getOrders(userId);
     }
 
     @Operation(summary = "Получить свободных работников на заказ")

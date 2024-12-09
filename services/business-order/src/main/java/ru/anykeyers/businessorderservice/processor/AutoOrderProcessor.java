@@ -9,7 +9,6 @@ import ru.anykeyers.commonsapi.domain.configuration.OrderProcessMode;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,8 +30,7 @@ public class AutoOrderProcessor implements OrderProcessor {
             kafkaTemplate.send(MessageQueue.ORDER_DELETE, order);
             return;
         }
-        orderService.appointOrderEmployee(order.getId(), getFreeEmployeeOrder(freeEmployees));
-        kafkaTemplate.send(MessageQueue.EMPLOYEE_ORDER_APPLY, order);
+        orderService.appointOrderEmployee(order, getFreeEmployeeOrder(freeEmployees));
     }
 
     @Override

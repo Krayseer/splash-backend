@@ -2,24 +2,17 @@ package ru.anykeyers.orderservice.service;
 
 import ru.anykeyers.commonsapi.domain.Interval;
 import ru.anykeyers.commonsapi.domain.order.OrderState;
-import ru.anykeyers.commonsapi.domain.user.User;
 import ru.anykeyers.orderservice.domain.Order;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Сервис обработки заказов автомойки
  */
-public interface CarWashService {
-
-    /**
-     * Получить список заказов автомойки пользователя
-     *
-     * @param user пользователь
-     */
-    List<Order> getCarWashOrders(User user);
+public interface CarWashOrderService {
 
     /**
      * Получить список заказов автомойки
@@ -27,6 +20,13 @@ public interface CarWashService {
      * @param carWashId идентификатор автомойки
      */
     List<Order> getCarWashOrders(Long carWashId);
+
+    /**
+     * Получить карту соответствия количества заказов по состояниям заказов
+     *
+     * @param carWashId идентификатор автомойки
+     */
+    Map<OrderState, Long> getOrdersCountByState(Long carWashId);
 
     /**
      * Получить список свободных интервалов времени для заказа
@@ -51,11 +51,4 @@ public interface CarWashService {
      */
     List<Order> getWaitConfirmOrders(Long carWashId);
 
-    /**
-     * Получить количество заказов
-     *
-     * @param carWashId     идентификатор автомойки
-     * @param orderState    статус заказа
-     */
-    int getOrdersCount(Long carWashId, OrderState orderState);
 }
