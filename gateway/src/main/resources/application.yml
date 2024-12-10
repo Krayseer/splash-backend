@@ -23,28 +23,34 @@ server:
   port: ${GATEWAY_PORT}
 
 springdoc:
-  api-docs:
-    enabled: true
   swagger-ui:
-    enabled: true
     path: /swagger-ui.html
     operationsSorter: method
     config-url: /v3/api-docs/swagger-config
     urls:
-      - url: /order/v3/api-docs
-        name: Order service
+      - name: Сервис заказов
+        url: /api/order/v3/api-docs
 
-      - url: /car-wash/v3/api-docs
-        name: Car wash service
+      - name: Сервис автомоек
+        url: /api/car-wash/v3/api-docs
 
-      - url: /business-order/v3/api-docs
-        name: Business order service
+      - name: Сервис обработки заказов автомойкой
+        url: /api/business-order/v3/api-docs
 
-      - url: /statistics/v3/api-docs
-        name: Statistics
+      - name: Сервис статистики
+        url: /api/statistics/v3/api-docs
 
-      - url: /notification/v3/api-docs
-        name: Notification service
+      - name: Сервис уведомлений
+        url: /api/notification/v3/api-docs
 
-      - url: /service/v3/api-docs
-        name: Service of services
+      - name: Сервис услуг
+        url: /api/service/v3/api-docs
+
+      - name: Сервис чатов
+        url: /api/rest/chat/v3/api-docs
+
+      - name: Сервис хранилища
+        url: /api/storage/v3/api-docs
+
+      - name: Сервис пользователей
+        url: /api/user/v3/api-docs

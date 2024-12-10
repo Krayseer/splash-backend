@@ -1,5 +1,8 @@
 package ru.anykeyers.storageservice.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
@@ -18,17 +21,24 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ControllerName.BASE_URL)
+@Tag(name = "Обработка файлов")
 public class FileController {
 
     private final FileStorageService fileStorageService;
 
+    @Operation(summary = "Загрузить фотографию")
     @GetMapping("/photo/{id}")
-    public ResponseEntity<Resource> loadPhoto(@PathVariable UUID id) {
+    public ResponseEntity<Resource> loadPhoto(
+            @Parameter(description = "Идентификатор фотографии") @PathVariable UUID id
+    ) {
         return loadFile(id, FileType.PHOTO);
     }
 
+    @Operation(summary = "Загрузить видеоролик")
     @GetMapping("/video/{id}")
-    public ResponseEntity<Resource> loadVideo(@PathVariable UUID id) {
+    public ResponseEntity<Resource> loadVideo(
+            @Parameter(description = "Идентификатор видеоролика") @PathVariable UUID id
+    ) {
         return loadFile(id, FileType.VIDEO);
     }
 

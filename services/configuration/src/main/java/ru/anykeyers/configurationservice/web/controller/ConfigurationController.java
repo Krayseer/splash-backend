@@ -1,6 +1,7 @@
 package ru.anykeyers.configurationservice.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -51,7 +52,9 @@ public class ConfigurationController {
 
     @Operation(summary = "Получить информацию об автомойке в PDF формате")
     @GetMapping("/pdf/{userId}")
-    public ResponseEntity<byte[]> getCurrentUserConfigurationPdf(@PathVariable UUID userId) {
+    public ResponseEntity<byte[]> getCurrentUserConfigurationPdf(
+            @Parameter(description = "Идентификатор пользователя") @PathVariable UUID userId
+    ) {
         ByteArrayOutputStream document = configurationService.getConfigurationPdf(userId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -62,13 +65,17 @@ public class ConfigurationController {
 
     @Operation(summary = "Получить конфигурацию автомойки пользователя")
     @GetMapping("/user/{userId}")
-    public ConfigurationDTO getUserConfiguration(@PathVariable UUID userId) {
+    public ConfigurationDTO getUserConfiguration(
+            @Parameter(description = "Идентификатор пользователя") @PathVariable UUID userId
+    ) {
         return configurationMapper.toDTO(configurationService.getConfiguration(userId));
     }
 
     @Operation(summary = "Получить конфигурацию автомойки по идентификатору")
     @GetMapping("/{id}")
-    public ConfigurationDTO getConfigurationById(@PathVariable Long id) {
+    public ConfigurationDTO getConfigurationById(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long id
+    ) {
         return configurationMapper.toDTO(configurationService.getConfiguration(id));
     }
 
@@ -94,7 +101,7 @@ public class ConfigurationController {
         configurationService.updateConfiguration(JwtUtils.extractUser(jwt), updateRequest);
     }
 
-    @Operation(summary = "Удалить конфигурацию автомойки")
+    @Operation(summary = "Удалить конфигурацию автомойки авторизованного пользователя")
     @DeleteMapping
     public void deleteConfiguration(@AuthenticationPrincipal Jwt jwt) {
         configurationService.deleteConfiguration(JwtUtils.extractUser(jwt));

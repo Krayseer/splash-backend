@@ -8,6 +8,12 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
 
+springdoc:
+  api-docs:
+    path: /api/user/v3/api-docs
+  swagger-ui:
+    path: /api/user/swagger-ui.html
+
 server:
   port: 0
   error:

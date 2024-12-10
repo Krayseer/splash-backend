@@ -1,6 +1,7 @@
 package ru.anykeyers.configurationservice.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,14 +34,18 @@ public class EmployeeController {
 
     @Operation(summary = "Получить список работников автомойки")
     @GetMapping("/{carWashId}")
-    public List<EmployeeDTO> getCarWashEmployees(@PathVariable Long carWashId) {
+    public List<EmployeeDTO> getCarWashEmployees(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long carWashId
+    ) {
         return employeeMapper.toDTO(employeeService.getCarWashEmployees(carWashId));
     }
 
     @Operation(summary = "Уволить работника с автомойки")
     @DeleteMapping("/{carWashId}")
-    public void deleteEmployee(@PathVariable("carWashId") Long carWashId,
-                               @RequestParam("userId") UUID userId) {
+    public void deleteEmployee(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable("carWashId") Long carWashId,
+            @Parameter(description = "Идентификатор работника") @RequestParam("userId") UUID userId
+    ) {
         employeeService.deleteEmployee(carWashId, userId);
     }
 

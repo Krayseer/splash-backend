@@ -27,13 +27,17 @@ public class ServiceController {
 
     @Operation(summary = "Получить данные об услуге")
     @GetMapping("/{id}")
-    public ServiceDTO getService(@PathVariable Long id) {
+    public ServiceDTO getService(
+            @Parameter(description = "Идентификатор услуги") @PathVariable Long id
+    ) {
         return modelMapper.map(serviceProcessor.getService(id), ServiceDTO.class);
     }
 
     @Operation(summary = "Получить историю изменений услуги")
     @GetMapping("/{id}/history")
-    public List<ServiceDTO> getServiceHistory(@PathVariable Long id) {
+    public List<ServiceDTO> getServiceHistory(
+            @Parameter(description = "Идентификатор услуги") @PathVariable Long id
+    ) {
         return convertToDTO(serviceProcessor.getServiceHistory(id));
     }
 

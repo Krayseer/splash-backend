@@ -1,5 +1,8 @@
 package ru.anykeyers.chat.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +26,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(ControllerName.BASE_URL)
 @RequiredArgsConstructor
+@Tag(name = "Получение сообщений и чатов")
 public class RestChatController {
 
     private final ChatService chatService;
 
     private final RemoteConfigurationService remoteConfigurationService;
 
+    @Operation(summary = "Получить список чатов пользователя")
     @GetMapping("/chats")
     public Set<UserChatDTO> getUserChats(Principal principal) {
         User user = JwtUtils.extractUser(principal);
@@ -38,14 +43,19 @@ public class RestChatController {
                 .collect(Collectors.toSet());
     }
 
+    @Operation(summary = "Получить список чатов владельца автомойки")
     @GetMapping
     public Set<ChatDTO> getCarWashOwnerChats(Principal principal) {
         User user = JwtUtils.extractUser(principal);
         return getChats(user, () -> chatService.getCarWashOwnerChats(user));
     }
 
+    @Operation(summary = "Получить список сообщений с другим пользователем")
     @GetMapping("/messages/{senderId}")
-    public List<ChatMessage> getChatMessages(@PathVariable UUID senderId, Principal principal) {
+    public List<ChatMessage> getChatMessages(
+            @Parameter(description = "Идентификатор другого пользователя") @PathVariable UUID senderId,
+            Principal principal
+    ) {
         return chatService.getChatMessages(JwtUtils.extractUser(principal), senderId);
     }
 

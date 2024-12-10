@@ -29,9 +29,9 @@ spring:
 
 springdoc:
   api-docs:
-    path: /order/v3/api-docs
+    path: /api/order/v3/api-docs
   swagger-ui:
-    path: /order/swagger-ui.html
+    path: /api/order/swagger-ui.html
 
 server:
   port: 0

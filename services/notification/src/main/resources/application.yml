@@ -46,9 +46,9 @@ spring:
 
 springdoc:
   api-docs:
-    path: /notification/v3/api-docs
+    path: /api/notification/v3/api-docs
   swagger-ui:
-    path: /notification/swagger-ui.html
+    path: /api/notification/swagger-ui.html
 
 server:
   port: 0

@@ -56,6 +56,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             );
         });
         metricRepository.save(metric);
+        log.info("Process order: {}", orderDTO);
     }
 
     private void processMetric(CarWashMetric metric,

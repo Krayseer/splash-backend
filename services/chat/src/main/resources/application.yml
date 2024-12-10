@@ -19,13 +19,13 @@ spring:
       ddl-auto: update
     database: postgresql
 
+springdoc:
+  api-docs:
+    path: /api/rest/chat/v3/api-docs
+  swagger-ui:
+    path: /api/rest/chat/swagger-ui.html
+
 server:
   port: 0
   error:
     include-message: always
-
-logging:
-  level:
-    root: INFO
-    org.springframework.web.socket: DEBUG
-    org.springframework.messaging: DEBUG

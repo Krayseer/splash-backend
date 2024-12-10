@@ -24,7 +24,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @Operation(summary = "Получить список заказов текущего работника")
+    @Operation(summary = "Получить список заказов текущего (авторизованного) работника")
     @GetMapping("/employee")
     public List<OrderDTO> getCurrentEmployeeOrders(@AuthenticationPrincipal Jwt jwt) {
         return orderService.getOrders(JwtUtils.extractUser(jwt));
@@ -32,13 +32,17 @@ public class OrderController {
 
     @Operation(summary = "Получить список заказов работника")
     @GetMapping("/{userId}")
-    public List<OrderDTO> getEmployeeOrders(@PathVariable UUID userId) {
+    public List<OrderDTO> getEmployeeOrders(
+            @Parameter(description = "Идентификатор пользователя") @PathVariable UUID userId
+    ) {
         return orderService.getOrders(userId);
     }
 
     @Operation(summary = "Получить свободных работников на заказ")
     @GetMapping("/free-employees/{orderId}")
-    public List<User> getFreeEmployeesOrder(@PathVariable Long orderId) {
+    public List<User> getFreeEmployeesOrder(
+            @Parameter(description = "Идентификатор пользователя") @PathVariable Long orderId
+    ) {
         return orderService.getFreeEmployees(orderId);
     }
 

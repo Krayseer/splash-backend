@@ -28,7 +28,9 @@ public class CarWashOrderController {
 
     @Operation(summary = "Получить список заказов автомойки")
     @GetMapping("/{carWashId}")
-    public List<OrderDTO> getCarWashOrders(@PathVariable Long carWashId) {
+    public List<OrderDTO> getCarWashOrders(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long carWashId
+    ) {
         return orderMapper.toDTO(
                 orderService.getCarWashOrders(carWashId)
         );

@@ -6,6 +6,12 @@ application:
     access-key-id: ${ACCESS_KEY_ID}
     secret-access-key: ${SECRET_KEY}
 
+springdoc:
+  api-docs:
+    path: /api/storage/v3/api-docs
+  swagger-ui:
+    path: /api/storage/swagger-ui.html
+
 spring:
   application:
     name: storage-service

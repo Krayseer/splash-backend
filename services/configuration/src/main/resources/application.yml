@@ -35,9 +35,9 @@ spring:
 
 springdoc:
   api-docs:
-    path: /car-wash/v3/api-docs
+    path: /api/car-wash/v3/api-docs
   swagger-ui:
-    path: /car-wash/swagger-ui.html
+    path: /api/car-wash/swagger-ui.html
 
 server:
   port: 0

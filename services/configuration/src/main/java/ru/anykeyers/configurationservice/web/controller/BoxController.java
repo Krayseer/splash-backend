@@ -1,6 +1,7 @@
 package ru.anykeyers.configurationservice.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,7 +27,9 @@ public class BoxController {
 
     @Operation(summary = "Получить все боксы автомойки")
     @GetMapping("/{carWashId}")
-    public List<BoxDTO> getAllBoxes(@PathVariable Long carWashId) {
+    public List<BoxDTO> getAllBoxes(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long carWashId
+    ) {
         return boxService.getCarWashBoxes(carWashId).stream()
                 .map(box -> modelMapper.map(box, BoxDTO.class))
                 .toList();
@@ -46,7 +49,9 @@ public class BoxController {
 
     @Operation(summary = "Удалить бокс у автомойки")
     @DeleteMapping("/{boxId}")
-    public void deleteBox(@PathVariable Long boxId) {
+    public void deleteBox(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long boxId
+    ) {
         boxService.deleteBox(boxId);
     }
 

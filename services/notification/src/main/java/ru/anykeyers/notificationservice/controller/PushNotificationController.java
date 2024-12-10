@@ -1,6 +1,7 @@
 package ru.anykeyers.notificationservice.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,9 +27,11 @@ public class PushNotificationController {
         return pushNotificationService.getNotifications(JwtUtils.extractUser(jwt));
     }
 
-    @Operation(summary = "Удалить push уведомление")
+    @Operation(summary = "Удалить уведомление")
     @DeleteMapping("/{pushId}")
-    public void deleteNotification(@PathVariable long pushId) {
+    public void deleteNotification(
+            @Parameter(description = "Идентификатор уведомления") @PathVariable long pushId
+    ) {
         pushNotificationService.deleteNotification(pushId);
     }
 

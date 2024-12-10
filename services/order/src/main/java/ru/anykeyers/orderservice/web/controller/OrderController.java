@@ -1,6 +1,7 @@
 package ru.anykeyers.orderservice.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,13 +25,17 @@ public class OrderController {
 
     @Operation(summary = "Получить заказ по идентификатору")
     @GetMapping("/{id}")
-    public OrderDTO getOrderById(@PathVariable Long id) {
+    public OrderDTO getOrderById(
+            @Parameter(description = "Идентификатор автомойки") @PathVariable Long id
+    ) {
         return orderMapper.toDTO(orderService.getOrder(id));
     }
 
     @Operation(summary = "Получить список заказов по идентификаторам")
     @GetMapping("/list")
-    public List<OrderDTO> getOrders(@RequestParam("order-ids") Long[] orderIds) {
+    public List<OrderDTO> getOrders(
+            @Parameter(description = "Идентификаторы заказов") @RequestParam("order-ids") Long[] orderIds
+    ) {
         return orderMapper.toDTO(
                 orderService.getOrders(Arrays.stream(orderIds).toList())
         );
@@ -39,7 +44,9 @@ public class OrderController {
     @Operation(summary = "Удалить заказ пользователя")
     @DeleteMapping("/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long orderId) {
+    public void deleteOrder(
+            @Parameter(description = "Идентификатор заказа") @PathVariable Long orderId
+    ) {
         orderService.deleteOrder(orderId);
     }
 

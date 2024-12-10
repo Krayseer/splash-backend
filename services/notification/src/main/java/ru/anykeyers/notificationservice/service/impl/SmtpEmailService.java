@@ -33,7 +33,7 @@ public class SmtpEmailService implements NotificationService {
         message.setText(notification.getMessage());
         try {
             emailSender.send(message);
-            log.info("Send message to ({}) with content: {}", user.getUserInfo().getEmail(), notification.getMessage());
+            log.info("Send notification: {}", notification);
         } catch (MailAuthenticationException mailAuthenticationException) {
             log.error("Failed send message to: {}", user.getUserInfo().getEmail());
         }
