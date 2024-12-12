@@ -56,6 +56,13 @@ public interface ConfigurationService {
     void registerConfiguration(User user, ConfigurationRegisterRequest registerRequest);
 
     /**
+     * Сохранить или обновить конфигурацию
+     *
+     * @param configuration конфигурация
+     */
+    void saveOrUpdateConfiguration(Configuration configuration);
+
+    /**
      * Обновить данные об автомойке
      *
      * @param updateRequest обновлённая конфигурация автомойки

@@ -93,6 +93,13 @@ public class Configuration {
      */
     @CreationTimestamp
     private Instant createdAt;
+    /**
+     * Валидна ли организация
+     */
+    @Column(
+            name = "valid"
+    )
+    private boolean valid = false;
 
     public void addPhotoUrls(List<String> photoUrls) {
         if (this.photoUrls == null) {

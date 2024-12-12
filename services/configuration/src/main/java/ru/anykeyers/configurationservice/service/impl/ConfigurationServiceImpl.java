@@ -19,9 +19,11 @@ import ru.anykeyers.configurationservice.exception.ConfigurationNotFoundExceptio
 import ru.anykeyers.configurationservice.exception.UserNotFoundConfigurationException;
 import ru.anykeyers.configurationservice.service.ConfigurationService;
 import ru.anykeyers.configurationservice.service.ReportWriter;
+import ru.anykeyers.commonsapi.task.TaskService;
+import ru.anykeyers.configurationservice.task.TaskFactory;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationRegisterRequest;
 import ru.anykeyers.configurationservice.web.dto.ConfigurationUpdateRequest;
-import ru.krayseer.storageclient.FileStorageClient;
+import ru.krayseer.storageclient.service.StorageClient;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -39,15 +41,19 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     private final ModelMapper modelMapper;
 
+    private final ObjectMapper objectMapper;
+
     private final ConfigurationRepository configurationRepository;
 
-    private final FileStorageClient fileStorageClient;
-
-    private final ObjectMapper objectMapper;
+    private final StorageClient storageClient;
 
     private final ReportWriter reportWriter;
 
     private final ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
+
+    private final TaskService taskService;
+
+    private final TaskFactory taskFactory;
 
     @Override
     public List<Configuration> getAllConfigurations() {
@@ -86,6 +92,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                 .organizationInfo(organizationInfo)
                 .build();
         configurationRepository.save(configuration);
+        taskService.addTask(taskFactory.createValidationTask(configuration, this::saveOrUpdateConfiguration));
+
+    }
+
+    @Override
+    public void saveOrUpdateConfiguration(Configuration configuration) {
+        configurationRepository.save(configuration);
     }
 
     @Override
@@ -119,22 +132,22 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (video == null) {
             return;
         }
-        threadPool.execute(() -> fileStorageClient.uploadVideo(video, fileId -> {
+        threadPool.execute(() -> storageClient.uploadVideo(video, fileId -> {
             configuration.addVideo(fileId);
             configurationRepository.save(configuration);
             log.info("Success configuration video: {}", configuration.getVideoId());
-        }));
+        }, configuration.getUserId()));
     }
 
     private void uploadConfigurationPhotos(Configuration configuration, List<MultipartFile> photos) {
         if (CollectionUtils.isEmpty(photos)) {
             return;
         }
-        threadPool.execute(() -> fileStorageClient.uploadPhotos(photos, fileIds -> {
-            configuration.addPhotoUrls(fileIds);
+        photos.forEach(photo -> threadPool.execute(() -> storageClient.uploadPhoto(photo, fileIds -> {
+            configuration.addPhotoUrls(List.of(fileIds));
             configurationRepository.save(configuration);
             log.info("Success upload configuration photos: {}", configuration.getPhotoUrls());
-        }));
+        }, configuration.getUserId())));
     }
 
 }

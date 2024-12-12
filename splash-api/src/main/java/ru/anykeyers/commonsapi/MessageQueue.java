@@ -30,4 +30,9 @@ public final class MessageQueue {
      */
     public static final String ORDER_EMPLOYEE_DISAPPOINT = "order-employee-disappointment";
 
+    /**
+     * Очередь проверки ИНН автомоек
+     */
+    public static final String CAR_WASH_TIN_VALIDATE_RESULT = "car-wash-tin-check-result";
+
 }

@@ -25,5 +25,9 @@ public final class ControllerName {
      * Контроллер приглашений
      */
     public static final String INVITATION_CONTROLLER = BASE_CONTROLLER + "/invitation";
+    /**
+     * Контроллер заданий
+     */
+    public static final String TASK_CONTROLLER = BASE_CONTROLLER + "/task";
 
 }

@@ -1,18 +1,31 @@
-package ru.anykeyers.commonsapi.config;
+package ru.anykeyers.configurationservice.config;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.krayseer.storageclient.FileStorageClient;
+import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import ru.anykeyers.commonsapi.config.KafkaConfig;
+import ru.anykeyers.commonsapi.config.RemoteConfig;
+import ru.anykeyers.commonsapi.config.WebConfig;
+import ru.anykeyers.commonsapi.task.TaskService;
+import ru.krayseer.storageclient.service.FileStorageClient;
 import ru.krayseer.storageclient.StorageProvider;
 
 /**
- * Конфигурация хранилища
+ * Контекст приложения
  */
 @Configuration
-public class StorageConfig {
+@EnableScheduling
+@Import({ WebConfig.class, RemoteConfig.class, KafkaConfig.class })
+public class ApplicationConfig {
+
+    @Bean
+    public TaskService taskService() {
+        return new TaskService();
+    }
 
     @Value("${GATEWAY_HOST}")
     private String gatewayHost;
@@ -40,8 +53,11 @@ public class StorageConfig {
     }
 
     @Bean
-    public FileStorageClient fileStorageClient(StorageProvider storageProvider) {
-        return new FileStorageClient(storageProvider);
+    public FileStorageClient fileStorageClient(TaskService taskService,
+                                               StorageProvider storageProvider) {
+        FileStorageClient fileStorageClient = new FileStorageClient(storageProvider);
+        fileStorageClient.setTaskService(taskService);
+        return fileStorageClient;
     }
 
 }

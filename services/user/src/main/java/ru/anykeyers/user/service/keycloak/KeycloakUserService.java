@@ -14,7 +14,7 @@ import ru.anykeyers.user.exception.UserNotFoundException;
 import ru.anykeyers.user.exception.UserAlreadyExistsException;
 import ru.anykeyers.user.service.UserService;
 import ru.anykeyers.commonsapi.domain.user.User;
-import ru.krayseer.storageclient.FileStorageClient;
+import ru.krayseer.storageclient.service.StorageClient;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
@@ -31,7 +31,7 @@ public class KeycloakUserService implements UserService {
 
     private final KeycloakConfig.Configurator keycloakConfigurator;
 
-    private final FileStorageClient fileStorageClient;
+    private final StorageClient storageClient;
 
     @Override
     public Set<User> getAllUsers() {
@@ -72,10 +72,10 @@ public class KeycloakUserService implements UserService {
 
     @Override
     public void addPhoto(User user, MultipartFile photo) {
-        fileStorageClient.uploadPhoto(photo, photoId -> {
+        storageClient.uploadPhoto(photo, photoId -> {
             user.getUserInfo().setPhotoUrl(photoId);
             updateUser(user);
-        });
+        }, user.getId());
     }
 
     @Override

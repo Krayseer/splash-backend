@@ -43,4 +43,6 @@ public class ConfigurationDTO {
 
     private String createdAt;
 
+    private boolean valid;
+
 }
