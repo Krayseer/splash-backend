@@ -19,6 +19,13 @@ public interface StatisticsService {
     Statistics getStatistics(Long carWashId);
 
     /**
+     * Получить статистику по автомойке в формате PDF
+     *
+     * @param carWashId идентификатор автомойки
+     */
+    byte[] getStatisticsPdf(Long carWashId);
+
+    /**
      * Собрать метрики по заказу
      *
      * @param orderDTO данные о заказе

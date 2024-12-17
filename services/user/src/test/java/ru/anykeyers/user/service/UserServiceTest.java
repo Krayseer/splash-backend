@@ -1,4 +1,4 @@
-//package ru.anykeyers.authorizationserver.service;
+//package ru.anykeyers.user.service;
 //
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.Test;
@@ -6,14 +6,6 @@
 //import org.mockito.*;
 //import org.mockito.junit.jupiter.MockitoExtension;
 //import org.springframework.http.ResponseEntity;
-//import ru.anykeyers.authorizationserver.domain.entity.Role;
-//import ru.anykeyers.authorizationserver.domain.User;
-//import ru.anykeyers.authorizationserver.web.dto.UserRegisterRequest;
-//import ru.anykeyers.authorizationserver.domain.UserSetting;
-//import ru.anykeyers.authorizationserver.exception.UserAlreadyExistsException;
-//import ru.anykeyers.authorizationserver.exception.UserNotFoundException;
-//import ru.anykeyers.authorizationserver.repository.UserRepository;
-//import ru.anykeyers.commonsapi.domain.user.UserSettingDTO;
 //import ru.anykeyers.commonsapi.remote.RemoteStorageService;
 //
 //import java.util.ArrayList;

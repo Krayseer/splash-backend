@@ -14,6 +14,7 @@ import ru.anykeyers.statistics.domain.CarWashMetric;
 import ru.anykeyers.statistics.domain.key.CarWashMetricId;
 import ru.anykeyers.statistics.domain.key.KeyGenerator;
 import ru.anykeyers.statistics.repository.MetricRepository;
+import ru.anykeyers.statistics.service.impl.StatisticsServiceImpl;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -65,7 +66,7 @@ class StatisticsServiceTest {
             public long getServicesDuration(List<Long> serviceIds) {
                 return 0;
             }
-        });
+        }, null);
     }
 
     /**

@@ -37,8 +37,10 @@ public class OrderStateProcessor {
     @Scheduled(fixedDelay = DELAY)
     public void verifyOrders() {
         long now = Instant.now().toEpochMilli();
-        threadPool.execute(() -> verifyProcessingOrders(now));
-        threadPool.execute(() -> verifyProcessedOrders(now));
+        threadPool.execute(() -> {
+            verifyProcessingOrders(now);
+            verifyProcessedOrders(now);
+        });
     }
 
     /**

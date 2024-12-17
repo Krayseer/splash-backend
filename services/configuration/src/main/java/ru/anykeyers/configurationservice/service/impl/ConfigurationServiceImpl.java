@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 /**
  * Реализация сервиса обработки конфигураций
@@ -143,11 +144,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         if (CollectionUtils.isEmpty(photos)) {
             return;
         }
-        photos.forEach(photo -> threadPool.execute(() -> storageClient.uploadPhoto(photo, fileIds -> {
-            configuration.addPhotoUrls(List.of(fileIds));
-            configurationRepository.save(configuration);
-            log.info("Success upload configuration photos: {}", configuration.getPhotoUrls());
-        }, configuration.getUserId())));
+        threadPool.execute(() -> {
+            for(MultipartFile photo: photos) {
+                Consumer<String> callback = fileIds -> {
+                    configuration.addPhotoUrls(List.of(fileIds));
+                    configurationRepository.save(configuration);
+                    log.info("Success upload configuration photos: {}", configuration.getPhotoUrls());
+                };
+                storageClient.uploadPhoto(photo, callback, configuration.getUserId());
+            }
+        });
     }
 
 }

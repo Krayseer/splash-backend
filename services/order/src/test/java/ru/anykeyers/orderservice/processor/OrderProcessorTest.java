@@ -37,29 +37,29 @@ public class OrderProcessorTest {
     @Test
     @SneakyThrows
     void verifyProcessingOrders() {
-//        Order processingOrder = Order.builder()
-//                .state(OrderState.WAIT_PROCESS)
-//                .startTime(Instant.now().minus(2, ChronoUnit.SECONDS).toEpochMilli())
-//                .endTime(Instant.now().plus(35, ChronoUnit.MINUTES).toEpochMilli())
-//                .build();
-//        Order waitingOrder = Order.builder()
-//                .state(OrderState.WAIT_PROCESS)
-//                .startTime(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())
-//                .endTime(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli())
-//                .build();
-//
-//        Mockito.when(orderService.getOrdersByState(OrderState.PROCESSING))
-//                .thenReturn(Collections.emptyList());
-//        Mockito.when(orderService.getOrdersByState(OrderState.WAIT_PROCESS))
-//                .thenReturn(List.of(processingOrder, waitingOrder));
-//
-//        orderProcessor.verifyOrders();
-//        Thread.sleep(1000);
-//
-//        Mockito.verify(orderService, Mockito.times(1)).saveOrUpdate(processingOrder);
-//        Assertions.assertEquals(OrderState.PROCESSING, processingOrder.getState());
-//        Mockito.verify(orderService, Mockito.never()).saveOrUpdate(waitingOrder);
-//        Assertions.assertEquals(OrderState.WAIT_PROCESS, waitingOrder.getState());
+        Order processingOrder = Order.builder()
+                .state(OrderState.WAIT_PROCESS)
+                .startTime(Instant.now().minus(2, ChronoUnit.SECONDS).toEpochMilli())
+                .endTime(Instant.now().plus(35, ChronoUnit.MINUTES).toEpochMilli())
+                .build();
+        Order waitingOrder = Order.builder()
+                .state(OrderState.WAIT_PROCESS)
+                .startTime(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())
+                .endTime(Instant.now().plus(2, ChronoUnit.HOURS).toEpochMilli())
+                .build();
+
+        Mockito.when(orderService.getOrdersByState(OrderState.PROCESSING))
+                .thenReturn(Collections.emptyList());
+        Mockito.when(orderService.getOrdersByState(OrderState.WAIT_PROCESS))
+                .thenReturn(List.of(processingOrder, waitingOrder));
+
+        orderProcessor.verifyOrders();
+        Thread.sleep(1000);
+
+        Mockito.verify(orderService, Mockito.never()).saveOrUpdate(processingOrder);
+        Assertions.assertEquals(OrderState.WAIT_PROCESS, processingOrder.getState());
+        Mockito.verify(orderService).saveOrUpdate(waitingOrder);
+        Assertions.assertEquals(OrderState.PROCESSING, waitingOrder.getState());
     }
 
     /**
@@ -70,29 +70,29 @@ public class OrderProcessorTest {
     @Test
     @SneakyThrows
     void verifyProcessedOrders() {
-//        Order processingOrder = Order.builder()
-//                .status(OrderState.PROCESSING)
-//                .startTime(Instant.now().minus(2, ChronoUnit.SECONDS))
-//                .endTime(Instant.now().plus(30, ChronoUnit.MINUTES))
-//                .build();
-//        Order processedOrder = Order.builder()
-//                .status(OrderState.PROCESSING)
-//                .startTime(Instant.now().minus(1, ChronoUnit.HOURS))
-//                .endTime(Instant.now().minus(30, ChronoUnit.SECONDS))
-//                .build();
-//
-//        Mockito.when(orderService.findByStatus(OrderState.WAIT_PROCESS, PageRequest.of(0, 100)))
-//                .thenReturn(Collections.emptyList());
-//        Mockito.when(orderService.findByStatus(OrderState.PROCESSING, PageRequest.of(0, 100)))
-//                .thenReturn(List.of(processingOrder, processedOrder));
-//
-//        orderProcessor.verifyOrders();
-//        Thread.sleep(500);
-//
-//        Mockito.verify(orderService, Mockito.times(0)).save(processingOrder);
-//        Assertions.assertEquals(OrderState.PROCESSING, processingOrder.getState());
-//        Mockito.verify(orderService, Mockito.times(1)).save(processedOrder);
-//        Assertions.assertEquals(OrderState.PROCESSED, processedOrder.getState());
+        Order processingOrder = Order.builder()
+                .state(OrderState.PROCESSING)
+                .startTime(Instant.now().minus(2, ChronoUnit.SECONDS).toEpochMilli())
+                .endTime(Instant.now().plus(30, ChronoUnit.MINUTES).toEpochMilli())
+                .build();
+        Order processedOrder = Order.builder()
+                .state(OrderState.PROCESSING)
+                .startTime(Instant.now().minus(1, ChronoUnit.HOURS).toEpochMilli())
+                .endTime(Instant.now().minus(30, ChronoUnit.SECONDS).toEpochMilli())
+                .build();
+
+        Mockito.when(orderService.getOrdersByState(OrderState.WAIT_PROCESS))
+                .thenReturn(Collections.emptyList());
+        Mockito.when(orderService.getOrdersByState(OrderState.PROCESSING))
+                .thenReturn(List.of(processingOrder, processedOrder));
+
+        orderProcessor.verifyOrders();
+        Thread.sleep(1000);
+
+        Mockito.verify(orderService).saveOrUpdate(processingOrder);
+        Assertions.assertEquals(OrderState.PROCESSED, processingOrder.getState());
+        Mockito.verify(orderService, Mockito.never()).saveOrUpdate(processedOrder);
+        Assertions.assertEquals(OrderState.PROCESSING, processedOrder.getState());
     }
 
 }

@@ -1,4 +1,4 @@
-package ru.anykeyers.statistics.service;
+package ru.anykeyers.statistics.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,8 @@ import ru.anykeyers.statistics.domain.*;
 import ru.anykeyers.statistics.domain.key.CarWashMetricId;
 import ru.anykeyers.statistics.domain.key.KeyGenerator;
 import ru.anykeyers.statistics.repository.MetricRepository;
+import ru.anykeyers.statistics.service.ReportGenerator;
+import ru.anykeyers.statistics.service.StatisticsService;
 
 import java.util.*;
 import java.util.function.Function;
@@ -30,6 +32,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final RemoteServicesService remoteServicesService;
 
+    private final ReportGenerator reportGenerator;
+
     @Override
     public Statistics getStatistics(Long carWashId) {
         List<CarWashMetric> metricsByDate = metricRepository.findByIdCarWashId(carWashId);
@@ -38,6 +42,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         metricsByDate.forEach(metric -> processMetric(metric, summaryStatisticsByServiceId, dateStatistics));
         SummaryStatistics summaryStatistics = buildSummaryStatistics(summaryStatisticsByServiceId);
         return new Statistics(summaryStatistics, dateStatistics);
+    }
+
+    @Override
+    public byte[] getStatisticsPdf(Long carWashId) {
+        Statistics statistics = getStatistics(carWashId);
+        return reportGenerator.generate(statistics);
     }
 
     @Override

@@ -2,7 +2,6 @@ package ru.anykeyers.statistics.domain.key;
 
 import org.springframework.stereotype.Component;
 import ru.anykeyers.commonsapi.domain.order.OrderDTO;
-import ru.anykeyers.commonsapi.domain.service.ServiceDTO;
 
 import java.time.Instant;
 import java.time.LocalDate;

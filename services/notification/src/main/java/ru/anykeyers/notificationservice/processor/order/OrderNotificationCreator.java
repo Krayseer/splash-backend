@@ -8,6 +8,9 @@ import ru.anykeyers.commonsapi.remote.RemoteConfigurationService;
 import ru.anykeyers.notificationservice.Messages;
 import ru.anykeyers.notificationservice.domain.Notification;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Генератор уведомлений о заказах
  */
@@ -18,6 +21,8 @@ public class OrderNotificationCreator {
     private final Messages messages;
 
     private final RemoteConfigurationService remoteConfigurationService;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd.MM.yyyy");
 
     /**
      * Создать уведомление о создании заказа
@@ -31,7 +36,7 @@ public class OrderNotificationCreator {
                 messages.getMessage("order.create.apply",
                         configurationDTO.getOrganizationInfo().getName(),
                         order.getBox().getName(),
-                        order.getStartTime())
+                        dateFormat.format(new Date(order.getStartTime())))
         );
     }
 
