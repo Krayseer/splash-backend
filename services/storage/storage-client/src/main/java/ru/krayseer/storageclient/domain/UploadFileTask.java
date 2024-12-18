@@ -138,7 +138,7 @@ public class UploadFileTask implements Task {
      * @param currentByteSize текущий объем обработанных байтов.
      */
     private void updateProgress(long currentByteSize) {
-        percentage = (int) ((currentByteSize * 100) / totalSize);
+        percentage = totalSize == 0 ? 100 : (int) ((currentByteSize * 100) / totalSize);
     }
 
     /**
