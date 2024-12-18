@@ -40,7 +40,10 @@ public class ServiceProcessorImpl implements ServiceProcessor {
 
     @Override
     public List<ServiceEntity> getServiceHistory(Long serviceId) {
-        return serviceRepository.findServicesByIdOrOriginalId(serviceId);
+        ServiceEntity service = getService(serviceId);
+        return service.getOriginalServiceId() == null
+                ? serviceRepository.findServicesByIdOrOriginalId(serviceId)
+                : serviceRepository.findServicesByIdOrOriginalId(service.getOriginalServiceId());
     }
 
     @Override
