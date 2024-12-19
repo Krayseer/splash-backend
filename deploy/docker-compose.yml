@@ -1,0 +1,156 @@
+version: '3.1'
+
+services:
+#  business-order:
+#    build:
+#      context: ../services/business-order
+#    image: 'krayseer/business-order-service'
+#    container_name: business-order-service
+#
+#  configuration:
+#    build:
+#      context: ../services/configuration
+#    image: 'krayseer/configuration-service'
+#    env_file:
+#      - .env
+#    container_name: configuration-service
+#
+  gateway:
+    build:
+      context: ../gateway
+    image: 'krayseer/gateway'
+    container_name: gateway
+    env_file:
+      - .env
+    ports:
+      - '${GATEWAY_PORT}:${GATEWAY_PORT}'
+#
+#  notification-service:
+#    build:
+#      context: ../services/notification
+#    image: 'krayseer/notification-service'
+#    container_name: notification-service
+#
+#  order-service:
+#    build:
+#      context: ../services/order
+#    image: 'krayseer/order-service'
+#    container_name: order-service
+#
+#  registry-service:
+#    build:
+#      context: ../discovery
+#    image: 'krayseer/registry-service'
+#    container_name: registry-service
+#    env_file:
+#      - .env
+#    ports:
+#      - '${DISCOVERY_PORT}:${DISCOVERY_PORT}'
+#
+#  service-of-services:
+#    build:
+#      context: ../services/service
+#    image: 'krayseer/service-of-services'
+#    container_name: service-of-services
+#
+#  statistics-service:
+#    build:
+#      context: ../services/statistics
+#    image: 'krayseer/statistics-service'
+#    container_name: statistics-service
+#
+#  storage-service:
+#    build:
+#      context: ../services/storage/storage-server
+#    image: 'krayseer/storage-service'
+#    container_name: storage-service
+#    ports:
+#      - '${STORAGE_SERVICE_PORT}:${STORAGE_SERVICE_PORT}'
+#
+  postgres:
+    image: 'postgres'
+    container_name: postgresql
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+#    volumes:
+#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#
+  keycloak-http:
+    container_name: keycloak-http
+    image: 'playaru/keycloak-russian'
+    ports:
+      - '80:8080'
+    env_file:
+      - .env
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+#      - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/conf/keycloak-cert.pem
+#      - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/conf/keycloak-key.pem
+    command: [ "start-dev" ]
+    volumes:
+      - keycloak-splash:/opt/keycloak/data
+#      - ./keycloak/certs:/opt/keycloak/conf
+      - ./keycloak/themes:/opt/keycloak/themes
+#
+#  zookeeper:
+#    container_name: zookeeper
+#    image: 'confluentinc/cp-zookeeper:latest'
+#    ports:
+#      - '2181:2181'
+#    environment:
+#      - ZOOKEEPER_CLIENT_PORT=${ZOOKEEPER_CLIENT_PORT}
+#      - ZOOKEEPER_TICK_TIME=${ZOOKEEPER_TICK_TIME}
+#    volumes:
+#      - zookeeper-splash:/var/lib/zookeeper/data
+#
+#  kafka:
+#    container_name: kafka
+#    image: 'confluentinc/cp-kafka:latest'
+#    ports:
+#      - '9092:9092'
+#    depends_on:
+#      - zookeeper
+#    environment:
+#      - KAFKA_BROKER_ID=${KAFKA_BROKER_ID}
+#      - KAFKA_ZOOKEEPER_CONNECT=${KAFKA_ZOOKEEPER_CONNECT}
+#      - KAFKA_ADVERTISED_LISTENERS=${KAFKA_ADVERTISED_LISTENERS}
+#      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+#      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=${KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR}
+#      - KAFKA_INTER_BROKER_LISTENER_NAME=LOCAL
+#    volumes:
+#      - kafka-splash:/var/lib/kafka/data
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9190:9090"
+    volumes:
+      - ./metrics/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    restart: always
+
+volumes:
+  keycloak-splash:
+    driver: local
+  splash-keycloak:
+    driver: local
+  postgres-splash:
+    driver: local
+  kafka-splash:
+    driver: local
+  zookeeper-splash:
+    driver: local

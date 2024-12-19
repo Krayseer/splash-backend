@@ -6,11 +6,27 @@ application:
     access-key-id: ${ACCESS_KEY_ID}
     secret-access-key: ${SECRET_KEY}
 
+eureka:
+  instance:
+    prefer-ip-address: true
+
 springdoc:
   api-docs:
     path: /api/storage/v3/api-docs
   swagger-ui:
     path: /api/storage/swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 spring:
   application:

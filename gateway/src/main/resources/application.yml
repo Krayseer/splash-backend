@@ -22,6 +22,22 @@ spring:
 server:
   port: ${GATEWAY_PORT}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

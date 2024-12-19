@@ -1,4 +1,4 @@
 FROM openjdk:21
-ADD target/service-1.0-SNAPSHOT.jar app.jar
+ADD target/chat-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
-EXPOSE 8053
+EXPOSE 8070

@@ -3,6 +3,7 @@ package ru.anykeyers.statistics.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import ru.anykeyers.commonsapi.config.EurekaConfig;
 import ru.anykeyers.commonsapi.config.KafkaConfig;
 import ru.anykeyers.commonsapi.config.RemoteConfig;
 import ru.anykeyers.commonsapi.config.WebConfig;
@@ -12,6 +13,6 @@ import ru.anykeyers.commonsapi.config.WebConfig;
  */
 @Configuration
 @EnableScheduling
-@Import({ RemoteConfig.class, WebConfig.class, KafkaConfig.class })
+@Import({ RemoteConfig.class, WebConfig.class, KafkaConfig.class, EurekaConfig.class })
 public class ApplicationConfig {
 }

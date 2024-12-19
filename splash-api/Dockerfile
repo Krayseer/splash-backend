@@ -1,3 +1,3 @@
 FROM openjdk:21
-ADD target/user-1.0-SNAPSHOT.jar app.jar
+ADD target/splash-api-1.0.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

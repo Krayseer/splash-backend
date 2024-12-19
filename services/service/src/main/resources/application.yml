@@ -19,7 +19,17 @@ springdoc:
   swagger-ui:
     path: /api/service/swagger-ui.html
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 server:
   port: 0

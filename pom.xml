@@ -27,6 +27,7 @@
         <postgres.version>42.7.3</postgres.version>
         <splash-api.version>1.0</splash-api.version>
         <itextpdf.version>5.5.13.3</itextpdf.version>
+<!--        <prometheus.version>1.14.2</prometheus.version>-->
         <modelmapper.version>3.2.1</modelmapper.version>
         <spring-boot.version>3.2.5</spring-boot.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>

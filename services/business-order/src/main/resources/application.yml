@@ -27,6 +27,18 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_SERVER_URL}/realms/splash/protocol/openid-connect/certs
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 springdoc:
   api-docs:
     path: /api/business-order/v3/api-docs

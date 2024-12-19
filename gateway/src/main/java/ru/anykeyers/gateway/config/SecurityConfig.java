@@ -30,6 +30,9 @@ public class SecurityConfig {
                         .pathMatchers("/api/car-wash/configuration/all").permitAll()
                         .pathMatchers("/api/car-wash/configuration/pdf/**").permitAll()
 
+                        // Метрики
+                        .pathMatchers("/actuator/**").permitAll()
+
                         .anyExchange().authenticated()
                 )
                 .oauth2Login(Customizer.withDefaults())

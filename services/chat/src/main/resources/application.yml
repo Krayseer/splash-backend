@@ -19,6 +19,18 @@ spring:
       ddl-auto: update
     database: postgresql
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 springdoc:
   api-docs:
     path: /api/rest/chat/v3/api-docs

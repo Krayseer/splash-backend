@@ -5,12 +5,25 @@ spring:
 eureka:
   instance:
     hostname: ${DISCOVERY_HOST}
+    preferIpAddress: true
 
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 server:
   port: ${DISCOVERY_PORT}
