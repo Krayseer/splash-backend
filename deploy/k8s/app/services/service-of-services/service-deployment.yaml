@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-of-services
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-of-services
+  template:
+    metadata:
+      labels:
+        app: service-of-services
+    spec:
+      containers:
+        - name: service-of-services
+          image: krayseer/service-of-services
+          envFrom:
+            - configMapRef:
+                name: app-config

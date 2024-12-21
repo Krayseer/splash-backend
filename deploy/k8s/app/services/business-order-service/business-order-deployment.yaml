@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: business-order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: business-order-service
+  template:
+    metadata:
+      labels:
+        app: business-order-service
+    spec:
+      containers:
+        - name: business-order-service
+          image: krayseer/business-order-service
+          envFrom:
+            - configMapRef:
+                name: app-config

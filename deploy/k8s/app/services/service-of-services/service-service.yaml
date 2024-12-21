@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-of-services
+  labels:
+    app: service-of-services
+spec:
+  selector:
+    app: service-of-services
+  ports:
+    - protocol: TCP
+      port: 8080
+  type: NodePort

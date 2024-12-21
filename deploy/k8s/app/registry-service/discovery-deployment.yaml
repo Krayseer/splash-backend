@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry-service
+  template:
+    metadata:
+      labels:
+        app: registry-service
+    spec:
+      containers:
+        - name: gateway
+          image: krayseer/registry-service
+          envFrom:
+            - configMapRef:
+                name: app-config
+          ports:
+            - containerPort: 8761
